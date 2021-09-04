@@ -21,5 +21,6 @@ public class MoveCamera : MonoBehaviour
     {
         var rotation = Input.gyro.attitude.eulerAngles;
         transform.rotation = Quaternion.Euler(-rotation.x, -rotation.y, rotation.z);
+        debugText.text = "Rotation: " + transform.rotation.eulerAngles.ToString();
     }
 }
