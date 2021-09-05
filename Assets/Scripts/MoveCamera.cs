@@ -1,8 +1,11 @@
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 public class MoveCamera : MonoBehaviour
 {
-    public TMPro.TextMeshProUGUI debugText;
+    [SerializeField]
+    TMPro.TextMeshProUGUI debugText;
+
 
     private void Awake()
     {
@@ -19,8 +22,19 @@ public class MoveCamera : MonoBehaviour
     }
     private void Update()
     {
+        CalculateRotation();
+
+        //Reset
+        if (Input.touchCount > 0)
+        {
+            transform.localPosition = Vector3.zero;
+            transform.localRotation = Quaternion.identity;
+        }
+    }
+
+    void CalculateRotation()
+    {
         var rotation = Input.gyro.attitude.eulerAngles;
-        transform.rotation = Quaternion.Euler(-rotation.x, -rotation.y, rotation.z);
-        debugText.text = "Rotation: " + transform.rotation.eulerAngles.ToString();
+        transform.localRotation = Quaternion.Euler(360 - rotation.x, 360 - rotation.y, rotation.z);
     }
 }
