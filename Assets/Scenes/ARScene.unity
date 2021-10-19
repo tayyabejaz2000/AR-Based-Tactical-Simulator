@@ -138,7 +138,7 @@ GameObject:
   - component: {fileID: 41898307}
   m_Layer: 0
   m_Name: AR Camera
-  m_TagString: Untagged
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -395,6 +395,7 @@ GameObject:
   - component: {fileID: 1128454397}
   - component: {fileID: 1128454396}
   - component: {fileID: 1128454398}
+  - component: {fileID: 1128454399}
   m_Layer: 0
   m_Name: AR Session Origin
   m_TagString: Untagged
@@ -444,6 +445,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_PlanePrefab: {fileID: 1585201990951412, guid: a8396509991838c44a13574621f31168, type: 3}
   m_DetectionMode: -1
+--- !u!114 &1128454399
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1128454395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4dea56a9eaadd1c439095de4f9a371cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SerializedLibrary: {fileID: 11400000, guid: 2f3691841a9cd02489ad1a51a67427c9, type: 2}
+  m_MaxNumberOfMovingImages: 4
+  m_TrackedImagePrefab: {fileID: 16610492936174900, guid: 64894925a3775d04db263e8073e04557, type: 3}
 --- !u!1 &1860350859
 GameObject:
   m_ObjectHideFlags: 0
