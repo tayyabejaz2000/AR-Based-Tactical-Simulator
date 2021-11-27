@@ -461,32 +461,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_SerializedLibrary: {fileID: 11400000, guid: 2f3691841a9cd02489ad1a51a67427c9, type: 2}
   m_MaxNumberOfMovingImages: 4
-  m_TrackedImagePrefab: {fileID: 1374047559568562124, guid: cf43550deeaa0e74a8f11883f98aecc9, type: 3}
---- !u!114 &1128454400
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1128454395}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57569462d22b4d545a69e31317a42134, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1128454401
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1128454395}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 728ad7fae8e460a4ba41265c7308d757, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_AnchorPrefab: {fileID: 1374047559568562124, guid: cf43550deeaa0e74a8f11883f98aecc9, type: 3}
+  m_TrackedImagePrefab: {fileID: 16610492936174900, guid: 64894925a3775d04db263e8073e04557, type: 3}
 --- !u!1 &1860350859
 GameObject:
   m_ObjectHideFlags: 0
