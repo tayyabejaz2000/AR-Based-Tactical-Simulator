@@ -136,6 +136,7 @@ GameObject:
   - component: {fileID: 41898309}
   - component: {fileID: 41898308}
   - component: {fileID: 41898307}
+  - component: {fileID: 41898311}
   m_Layer: 0
   m_Name: AR Camera
   m_TagString: MainCamera
@@ -243,6 +244,22 @@ Transform:
   m_Father: {fileID: 1128454397}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &41898311
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 41898305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b15f82cc229284894964d2d30806969d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HumanSegmentationStencilMode: 0
+  m_HumanSegmentationDepthMode: 0
+  m_EnvironmentDepthMode: 1
+  m_OcclusionPreferenceMode: 0
 --- !u!1 &67239114
 GameObject:
   m_ObjectHideFlags: 0
@@ -1490,7 +1507,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d33ff3045e0699647842574949557fe6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameObjectToInstantiate: {fileID: 7077722046406986424, guid: 12f91791ebd07484a93d5fdfe7f10788, type: 3}
+  gameObjectToInstantiate: {fileID: 2534506921486780529, guid: dab34067644d6714eb1727070b5308ee, type: 3}
+  alertToInstantiate1: {fileID: 2361601238792951023, guid: 4c60d929edfbf17489c0d8731a74750d, type: 3}
+  alertToInstantiate2: {fileID: 6396996640828573836, guid: 81679752c5f30a04a8f31f0422a1b668, type: 3}
 --- !u!114 &1860350864
 MonoBehaviour:
   m_ObjectHideFlags: 0

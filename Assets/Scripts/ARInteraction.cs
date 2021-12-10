@@ -8,6 +8,8 @@ using UnityEngine.XR.ARSubsystems;
 public class ARInteraction : MonoBehaviour
 {
     public GameObject gameObjectToInstantiate;
+    public GameObject alertToInstantiate1;
+    public GameObject alertToInstantiate2;
 
     private List<GameObject> spawnedObject;
     private List<GameObject> spawnedSprites;
@@ -78,6 +80,13 @@ public class ARInteraction : MonoBehaviour
         for(int i = 0 ; i < spawnedSprites.Count ; i++)
         {
             spawnedSprites[i].transform.LookAt(ARCamera.transform);
+            /*
+            var temp = spawnedSprites[i].transform.rotation;
+            spawnedSprites[i].transform.rotation = Quaternion.Euler(temp.eulerAngles.x, temp.eulerAngles.y, 0f);
+            Vector3 rot = spawnedSprites[i].transform.rotation.eulerAngles;
+            rot.z = 0f;
+            spawnedSprites[i].transform.Rotate(rot);
+            */
         }
     }
 
@@ -87,15 +96,10 @@ public class ARInteraction : MonoBehaviour
         {
             var hitPose = hits[0].pose;
 
-            if(spawnedObject == null)
-            {
-                spawnedObject.Add(Instantiate(gameObjectToInstantiate, hitPose.position, hitPose.rotation));
-            }
-            else
-            {
-                spawnedObject[spawnedObject.Count-1].transform.position = hitPose.position;
-                spawnedObject[spawnedObject.Count-1].transform.rotation = hitPose.rotation;
-            }
+            spawnedObject.Add(Instantiate(gameObjectToInstantiate, hitPose.position, hitPose.rotation));
+        
+            spawnedObject[spawnedObject.Count-1].transform.position = hitPose.position;
+            spawnedObject[spawnedObject.Count-1].transform.rotation = hitPose.rotation;
         }
     }
 
@@ -105,15 +109,11 @@ public class ARInteraction : MonoBehaviour
         {
             var hitPose = hits[0].pose;
 
-            if(spawnedObject == null)
-            {
-                spawnedSprites.Add(Instantiate(gameObjectToInstantiate, hitPose.position, hitPose.rotation));
-            }
-            else
-            {
-                spawnedSprites[spawnedObject.Count-1].transform.position = hitPose.position;
-                spawnedSprites[spawnedObject.Count-1].transform.rotation = hitPose.rotation;
-            }
+            //Check Hit condition here
+            spawnedSprites.Add(Instantiate(alertToInstantiate1, hitPose.position, hitPose.rotation));
+        
+            spawnedSprites[spawnedSprites.Count-1].transform.position = hitPose.position;
+            spawnedSprites[spawnedSprites.Count-1].transform.rotation = hitPose.rotation;
         }
     }
 

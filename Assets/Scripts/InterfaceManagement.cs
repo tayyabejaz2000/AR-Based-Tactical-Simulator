@@ -48,6 +48,7 @@ public class InterfaceManagement : MonoBehaviour
 		} else if(buttonKey == 2)
 		{
 			Debug.Log("Key: 2");
+			ARController.AddAlert();
 		} else if(buttonKey == 3)
 		{
 			Debug.Log("Key: 3");

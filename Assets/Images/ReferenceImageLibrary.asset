@@ -16,16 +16,6 @@ MonoBehaviour:
   m_GuidHigh: 11231525702475040190
   m_Images:
   - m_SerializedGuid:
-      m_GuidLow: 5526122077398328475
-      m_GuidHigh: 6441609181241162164
-    m_SerializedTextureGuid:
-      m_GuidLow: 762467490476133906
-      m_GuidHigh: 10394598497145479851
-    m_Size: {x: 0.25, y: 0.2502781}
-    m_SpecifySize: 1
-    m_Name: augmented-images-earth
-    m_Texture: {fileID: 2800000, guid: 929d0e12d4240a94ab622a9d42084190, type: 3}
-  - m_SerializedGuid:
       m_GuidLow: 5364246181164422694
       m_GuidHigh: 8581162160283173008
     m_SerializedTextureGuid:
@@ -35,3 +25,13 @@ MonoBehaviour:
     m_SpecifySize: 1
     m_Name: Box
     m_Texture: {fileID: 2800000, guid: e68a272fdfe989b41bd6006ca4b92e8b, type: 3}
+  - m_SerializedGuid:
+      m_GuidLow: 5345974908080636699
+      m_GuidHigh: 2811408555208533632
+    m_SerializedTextureGuid:
+      m_GuidLow: 16461787576442774712
+      m_GuidHigh: 13961386360047240105
+    m_Size: {x: 0.20997, y: 0.29700595}
+    m_SpecifySize: 0
+    m_Name: Marker-1
+    m_Texture: {fileID: 2800000, guid: 1dcf64b80495e474a9839982eccec0c1, type: 3}

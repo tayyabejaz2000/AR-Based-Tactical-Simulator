@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 269129ba34e5b43d5aac34839ce7f646, type: 3}
   m_Name: AR Camera Config
   m_EditorClassIdentifier: 
-  TargetCameraFramerate: 3
-  DepthSensorUsage: 3
+  TargetCameraFramerate: 2
+  DepthSensorUsage: 1
   StereoCameraUsage: 3
