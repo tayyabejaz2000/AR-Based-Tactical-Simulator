@@ -32,6 +32,6 @@ MonoBehaviour:
       m_GuidLow: 16461787576442774712
       m_GuidHigh: 13961386360047240105
     m_Size: {x: 0.20997, y: 0.29700595}
-    m_SpecifySize: 1
+    m_SpecifySize: 0
     m_Name: Marker-1
     m_Texture: {fileID: 2800000, guid: 1dcf64b80495e474a9839982eccec0c1, type: 3}
