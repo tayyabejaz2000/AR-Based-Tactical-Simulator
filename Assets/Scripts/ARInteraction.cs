@@ -100,6 +100,8 @@ public class ARInteraction : MonoBehaviour
         
             spawnedObject[spawnedObject.Count-1].transform.position = hitPose.position;
             spawnedObject[spawnedObject.Count-1].transform.rotation = hitPose.rotation;
+
+            spawnedObject[spawnedObject.Count-1].transform.GetComponent<PlacementObject>().index = spawnedObject.Count-1;
         }
     }
 
@@ -117,4 +119,18 @@ public class ARInteraction : MonoBehaviour
         }
     }
 
+    public void RemoveObject()
+    {
+        Ray ray = ARCamera.ScreenPointToRay(crosshairPosition);
+        RaycastHit hitObject;
+        if(Physics.Raycast(ray, out hitObject))
+        {
+            PlacementObject placementObject = hitObject.transform.GetComponent<PlacementObject>();
+
+            if(placementObject != null)
+            {
+                spawnedObject.RemoveAt(placementObject.index);
+            }
+        }
+    }
 }

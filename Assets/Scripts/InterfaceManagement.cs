@@ -52,6 +52,7 @@ public class InterfaceManagement : MonoBehaviour
 		} else if(buttonKey == 3)
 		{
 			Debug.Log("Key: 3");
+			ARController.RemoveObject();
 		}
 
 

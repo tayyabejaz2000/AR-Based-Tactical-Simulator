@@ -42,6 +42,7 @@ GameObject:
   - component: {fileID: 4633699868038612434}
   - component: {fileID: 8638448272689089143}
   - component: {fileID: 5766043100454108861}
+  - component: {fileID: 1675070198888267968}
   m_Layer: 0
   m_Name: Ping Model
   m_TagString: Untagged
@@ -112,3 +113,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &1675070198888267968
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5405979636566269800}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 152368cf36d7bc54d8efac6a2ccfb5fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  index: -1
