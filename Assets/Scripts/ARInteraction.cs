@@ -17,13 +17,13 @@ public class ARInteraction : MonoBehaviour
     private Vector2 touchPosition;
     private Vector2 crosshairPosition;
 
+    [SerializeField]
     private Camera ARCamera;
 
     static List<ARRaycastHit> hits = new List<ARRaycastHit>();
 
     void Start()
     {
-        ARCamera = Camera.main;
 
         crosshairPosition = new Vector2(1920/2f, 1080/2f);
 
@@ -65,14 +65,6 @@ public class ARInteraction : MonoBehaviour
                 int mask = 1 << 6;
                 if(Physics.Raycast(ray, out hitObject, float.MaxValue, mask))
                 {
-                    //GameObject gameObject = hitObject.transform.gameObject;
-                    //PlacementObject placementObject = gameObject.GetComponent<PlacementObject>();
-                    Debug.Log("-------[Update]: "+"Transform: "+hitObject.transform.position.ToString());
-
-                    _arRaycastManager.Raycast(ray, hits, TrackableType.All);
-                    var hitPose = hits[0].pose;
-                    Debug.Log("-------[Update]: "+"Transform: "+hitPose.position.ToString());
-
                     var position = hitObject.transform.position;
 
                     for(int i = 0 ; i < spawnedObject.Count ; i++)
@@ -80,23 +72,12 @@ public class ARInteraction : MonoBehaviour
                         Debug.Log("-------[Update]: "+"Position["+i+"]: "+spawnedObject[i].transform.position.ToString());
                         if(spawnedObject[i].transform.position.Equals(position))
                         {
+                            var temp = spawnedObject[i];
                             spawnedObject.RemoveAt(i);
+                            Destroy(temp);
                             break;
                         }
                     }
-                    
-
-                    /*
-                    if(placementObject != null)
-                    {
-                        Debug.Log("-------[Update]: "+"Removing at Index: "+placementObject.index);
-                        spawnedObject.RemoveAt(placementObject.index);
-                    }
-                    else
-                    {
-                        Debug.Log("-------[Update]: "+"Placement Object is NULL");
-                    }
-                    */
                 }
             }
         }
@@ -149,9 +130,8 @@ public class ARInteraction : MonoBehaviour
         
             spawnedObject[spawnedObject.Count-1].transform.position = hitPose.position;
             spawnedObject[spawnedObject.Count-1].transform.rotation = hitPose.rotation;
-            spawnedObject[spawnedObject.Count-1].GetComponentInChildren<GameObject>().layer = 6;
 
-            PlacementObject placementObject = spawnedObject[spawnedObject.Count-1].transform.GetComponent<PlacementObject>();
+            PlacementObject placementObject = spawnedObject[spawnedObject.Count-1].GetComponent<PlacementObject>();
 
             if(placementObject != null)
             {
@@ -182,20 +162,21 @@ public class ARInteraction : MonoBehaviour
     {
         Ray ray = ARCamera.ScreenPointToRay(crosshairPosition);
         RaycastHit hitObject;
-        if(Physics.Raycast(ray, out hitObject))
+        int mask = 1 << 6;
+        if(Physics.Raycast(ray, out hitObject, float.MaxValue, mask))
         {
-            PlacementObject placementObject = hitObject.transform.GetComponent<PlacementObject>();
+            var position = hitObject.transform.position;
 
-            Debug.Log("-------[AddObject]: "+hitObject.GetType().ToString());
-
-            if(placementObject != null)
+            for(int i = 0 ; i < spawnedObject.Count ; i++)
             {
-                Debug.Log("-------[AddObject]: "+"Removing at Index: "+placementObject.index);
-                spawnedObject.RemoveAt(placementObject.index);
-            }
-            else
-            {
-                Debug.Log("-------[AddObject]: "+"Placement Object is NULL");
+                Debug.Log("-------[RemoveObject]: "+"Position["+i+"]: "+spawnedObject[i].transform.position.ToString());
+                if(spawnedObject[i].transform.position.Equals(position))
+                {
+                    var temp = spawnedObject[i];
+                    spawnedObject.RemoveAt(i);
+                    Destroy(temp);
+                    break;
+                }
             }
         }
     }
