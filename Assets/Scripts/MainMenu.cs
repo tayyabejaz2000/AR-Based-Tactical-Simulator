@@ -7,7 +7,7 @@ public class MainMenu : MonoBehaviour
 {
     public void StartSimulator()
     {
-        SceneManager.LoadScene("ARScene");
+        SceneManager.LoadScene(1);
     }
     public void QuitSimulator()
     {

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
@@ -21,6 +22,14 @@ public class ARInteraction : MonoBehaviour
     private Camera ARCamera;
 
     static List<ARRaycastHit> hits = new List<ARRaycastHit>();
+
+    //Logging Functionality
+    [SerializeField]
+    Text LogText;
+    void Log(string message)
+    {
+        LogText.text += $"{message}\n";
+    }
 
     void Start()
     {
@@ -52,57 +61,6 @@ public class ARInteraction : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.touchCount > 0)
-        {
-            Touch touch = Input.GetTouch(0);
-
-            touchPosition = touch.position;
-
-            if(touch.phase == TouchPhase.Began)
-            {
-                Ray ray = ARCamera.ScreenPointToRay(touchPosition);
-                RaycastHit hitObject;
-                int mask = 1 << 6;
-                if(Physics.Raycast(ray, out hitObject, float.MaxValue, mask))
-                {
-                    var position = hitObject.transform.position;
-
-                    for(int i = 0 ; i < spawnedObject.Count ; i++)
-                    {
-                        Debug.Log("-------[Update]: "+"Position["+i+"]: "+spawnedObject[i].transform.position.ToString());
-                        if(spawnedObject[i].transform.position.Equals(position))
-                        {
-                            var temp = spawnedObject[i];
-                            spawnedObject.RemoveAt(i);
-                            Destroy(temp);
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
-        return;
-
-        /*
-        if (!TryGetTouchPosition(out Vector2 touchPosition))
-            return;
-
-        if(_arRaycastManager.Raycast(touchPosition, hits, TrackableType.PlaneWithinPolygon))
-        {
-            var hitPose = hits[0].pose;
-
-            if(spawnedObject == null)
-            {
-                spawnedObject = Instantiate(gameObjectToInstantiate, hitPose.position, hitPose.rotation);
-            }
-            else
-            {
-                spawnedObject.transform.position = hitPose.position;
-                spawnedObject.transform.rotation = hitPose.rotation;
-            }
-        }
-        */
     }
 
     void LateUpdate()
@@ -110,13 +68,12 @@ public class ARInteraction : MonoBehaviour
         for(int i = 0 ; i < spawnedSprites.Count ; i++)
         {
             spawnedSprites[i].transform.LookAt(ARCamera.transform);
-            /*
-            var temp = spawnedSprites[i].transform.rotation;
-            spawnedSprites[i].transform.rotation = Quaternion.Euler(temp.eulerAngles.x, temp.eulerAngles.y, 0f);
-            Vector3 rot = spawnedSprites[i].transform.rotation.eulerAngles;
-            rot.z = 0f;
-            spawnedSprites[i].transform.Rotate(rot);
-            */
+            var position = spawnedSprites[i].transform.position;
+            var placementAlert = spawnedSprites[i].GetComponent<PlacementAlert>();
+            if(placementAlert != null)
+            {
+                placementAlert.setDistance(calculateDistance(position, ARCamera.transform.position));
+            }
         }
     }
 
@@ -155,6 +112,12 @@ public class ARInteraction : MonoBehaviour
         
             spawnedSprites[spawnedSprites.Count-1].transform.position = hitPose.position;
             spawnedSprites[spawnedSprites.Count-1].transform.rotation = hitPose.rotation;
+
+            var placementAlert = spawnedSprites[spawnedSprites.Count-1].GetComponent<PlacementAlert>();
+            if(placementAlert!=null)
+                placementAlert.setName("Some Alert");
+            else
+                Log("[AddAlert] Placement Alert is NULL");
         }
     }
 
@@ -179,5 +142,12 @@ public class ARInteraction : MonoBehaviour
                 }
             }
         }
+    }
+
+
+    //Some Helper functions
+    float calculateDistance(Vector3 pointOne, Vector3 pointTwo)
+    {
+        return (pointOne-pointTwo).magnitude;
     }
 }
