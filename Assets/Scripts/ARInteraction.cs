@@ -52,6 +52,55 @@ public class ARInteraction : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0);
+
+            touchPosition = touch.position;
+
+            if(touch.phase == TouchPhase.Began)
+            {
+                Ray ray = ARCamera.ScreenPointToRay(touchPosition);
+                RaycastHit hitObject;
+                int mask = 1 << 6;
+                if(Physics.Raycast(ray, out hitObject, float.MaxValue, mask))
+                {
+                    //GameObject gameObject = hitObject.transform.gameObject;
+                    //PlacementObject placementObject = gameObject.GetComponent<PlacementObject>();
+                    Debug.Log("-------[Update]: "+"Transform: "+hitObject.transform.position.ToString());
+
+                    _arRaycastManager.Raycast(ray, hits, TrackableType.All);
+                    var hitPose = hits[0].pose;
+                    Debug.Log("-------[Update]: "+"Transform: "+hitPose.position.ToString());
+
+                    var position = hitObject.transform.position;
+
+                    for(int i = 0 ; i < spawnedObject.Count ; i++)
+                    {
+                        Debug.Log("-------[Update]: "+"Position["+i+"]: "+spawnedObject[i].transform.position.ToString());
+                        if(spawnedObject[i].transform.position.Equals(position))
+                        {
+                            spawnedObject.RemoveAt(i);
+                            break;
+                        }
+                    }
+                    
+
+                    /*
+                    if(placementObject != null)
+                    {
+                        Debug.Log("-------[Update]: "+"Removing at Index: "+placementObject.index);
+                        spawnedObject.RemoveAt(placementObject.index);
+                    }
+                    else
+                    {
+                        Debug.Log("-------[Update]: "+"Placement Object is NULL");
+                    }
+                    */
+                }
+            }
+        }
+
         return;
 
         /*
@@ -100,8 +149,18 @@ public class ARInteraction : MonoBehaviour
         
             spawnedObject[spawnedObject.Count-1].transform.position = hitPose.position;
             spawnedObject[spawnedObject.Count-1].transform.rotation = hitPose.rotation;
+            spawnedObject[spawnedObject.Count-1].GetComponentInChildren<GameObject>().layer = 6;
 
-            spawnedObject[spawnedObject.Count-1].transform.GetComponent<PlacementObject>().index = spawnedObject.Count-1;
+            PlacementObject placementObject = spawnedObject[spawnedObject.Count-1].transform.GetComponent<PlacementObject>();
+
+            if(placementObject != null)
+            {
+                placementObject.index = spawnedObject.Count-1;
+            }
+            else
+            {
+                Debug.Log("-------[AddObject]: "+"Placement Object is NULL");
+            }
         }
     }
 
@@ -127,9 +186,16 @@ public class ARInteraction : MonoBehaviour
         {
             PlacementObject placementObject = hitObject.transform.GetComponent<PlacementObject>();
 
+            Debug.Log("-------[AddObject]: "+hitObject.GetType().ToString());
+
             if(placementObject != null)
             {
+                Debug.Log("-------[AddObject]: "+"Removing at Index: "+placementObject.index);
                 spawnedObject.RemoveAt(placementObject.index);
+            }
+            else
+            {
+                Debug.Log("-------[AddObject]: "+"Placement Object is NULL");
             }
         }
     }

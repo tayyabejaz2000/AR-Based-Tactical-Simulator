@@ -42,7 +42,8 @@ GameObject:
   - component: {fileID: 4633699868038612434}
   - component: {fileID: 8638448272689089143}
   - component: {fileID: 5766043100454108861}
-  - component: {fileID: 1675070198888267968}
+  - component: {fileID: 7683240246717656520}
+  - component: {fileID: 3703045683253561084}
   m_Layer: 0
   m_Name: Ping Model
   m_TagString: Untagged
@@ -113,7 +114,21 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &1675070198888267968
+--- !u!64 &7683240246717656520
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5405979636566269800}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -3341752633814986369, guid: 713e6910932b5464983731f8145c19f1, type: 3}
+--- !u!114 &3703045683253561084
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
