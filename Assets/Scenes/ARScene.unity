@@ -1200,7 +1200,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 31aa6bad387e7484aa9829c3cf68c541, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 089ddeab4cff5bb4b9c85f8c61ec1d7a, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1493,6 +1493,7 @@ MonoBehaviour:
   gameObjectToInstantiate: {fileID: 5011692246564093953, guid: 914d751e46ea6df4dbd7d302844ea2e8, type: 3}
   alertToInstantiate1: {fileID: 2361601238792951023, guid: 4c60d929edfbf17489c0d8731a74750d, type: 3}
   alertToInstantiate2: {fileID: 6396996640828573836, guid: 81679752c5f30a04a8f31f0422a1b668, type: 3}
+  ARCamera: {fileID: 41898306}
 --- !u!114 &1860350864
 MonoBehaviour:
   m_ObjectHideFlags: 0
