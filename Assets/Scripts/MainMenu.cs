@@ -7,8 +7,7 @@ public class MainMenu : MonoBehaviour
 {
     public void StartSimulator()
     {
-        Debug.Log("Scene changed!");
-        SceneManager.LoadScene("ARScene");
+        SceneManager.LoadScene(1);
     }
     public void QuitSimulator()
     {
