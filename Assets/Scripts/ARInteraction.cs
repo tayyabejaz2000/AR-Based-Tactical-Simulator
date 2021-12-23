@@ -108,16 +108,41 @@ public class ARInteraction : MonoBehaviour
             var hitPose = hits[0].pose;
 
             //Check Hit condition here
-            spawnedSprites.Add(Instantiate(alertToInstantiate1, hitPose.position, hitPose.rotation));
+            Ray ray = ARCamera.ScreenPointToRay(crosshairPosition);
+            RaycastHit hitObject;
+            int mask = 1 << 7;
+            if(Physics.Raycast(ray, out hitObject, float.MaxValue, mask))
+            {
+                var position = hitObject.transform.position;
+                var placementFlag = hitObject.transform.GetComponent<PlacementFlag>();
+
+                if(placementFlag != null && placementFlag.isPinged == false)
+                {
+                    //Log("[AddAlert] Position: "+position.ToString());
+                    //Log("[AddAlert] Original: "+hitPose.position.ToString());
+                    spawnedSprites.Add(Instantiate(alertToInstantiate1, position, hitPose.rotation));
+                    var placementAlert = spawnedSprites[spawnedSprites.Count-1].GetComponent<PlacementAlert>();
+                    placementFlag.isPinged = true;
+                    if(placementAlert!=null)
+                        placementAlert.setName(placementFlag.flagName);
+                    else
+                        Log("[AddAlert] Placement Alert is NULL");
+                }
+                else
+                {
+                    spawnedSprites.Add(Instantiate(alertToInstantiate2, hitPose.position, hitPose.rotation));
+                }
+            }
+            else
+            {
+                spawnedSprites.Add(Instantiate(alertToInstantiate2, hitPose.position, hitPose.rotation));
+            }
+            
         
             spawnedSprites[spawnedSprites.Count-1].transform.position = hitPose.position;
             spawnedSprites[spawnedSprites.Count-1].transform.rotation = hitPose.rotation;
 
-            var placementAlert = spawnedSprites[spawnedSprites.Count-1].GetComponent<PlacementAlert>();
-            if(placementAlert!=null)
-                placementAlert.setName("Some Alert");
-            else
-                Log("[AddAlert] Placement Alert is NULL");
+            
         }
     }
 

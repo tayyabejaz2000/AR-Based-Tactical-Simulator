@@ -9,7 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1263198229854317404}
-  m_Layer: 0
+  - component: {fileID: 851579721050177659}
+  - component: {fileID: 8943839842879171109}
+  m_Layer: 7
   m_Name: Flag_Prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -31,6 +33,32 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &851579721050177659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1263198229854317403}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7634d479796f8dd4f8b85c7cc0ec6954, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flagName: Objective 1
+--- !u!65 &8943839842879171109
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1263198229854317403}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.37, y: 0.5, z: 0.1}
+  m_Center: {x: 0.18, y: 0.1, z: 0}
 --- !u!1 &3764864045231155683
 GameObject:
   m_ObjectHideFlags: 0
@@ -42,7 +70,6 @@ GameObject:
   - component: {fileID: 4572467857901024089}
   - component: {fileID: 638227876207656188}
   - component: {fileID: 3404588925338716214}
-  - component: {fileID: 7092784746171522136}
   m_Layer: 0
   m_Name: Flag
   m_TagString: Untagged
@@ -113,15 +140,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &7092784746171522136
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3764864045231155683}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 152368cf36d7bc54d8efac6a2ccfb5fd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
