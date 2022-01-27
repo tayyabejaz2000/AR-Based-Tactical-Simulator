@@ -13,7 +13,7 @@ public class ARInteraction : MonoBehaviour
     public GameObject alertToInstantiate2;
 
     private List<GameObject> spawnedObject;
-    private List<GameObject> spawnedSprites;
+    private List<Vector3> spawnedSprites;
     private List<GameObject> UISprites;
     [SerializeField]
     private GameObject spritesAnchor;
@@ -35,7 +35,7 @@ public class ARInteraction : MonoBehaviour
     Text LogText;
     void Log(string message)
     {
-        LogText.text = $"{message}\n";
+        LogText.text += $"{message}\n";
     }
 
     void Start()
@@ -44,7 +44,7 @@ public class ARInteraction : MonoBehaviour
         crosshairPosition = new Vector2(1920 / 2f, 1080 / 2f);
 
         spawnedObject = new List<GameObject>();
-        spawnedSprites = new List<GameObject>();
+        spawnedSprites = new List<Vector3>();
         UISprites = new List<GameObject>();
     }
 
@@ -75,9 +75,9 @@ public class ARInteraction : MonoBehaviour
     {
         for (int i = 0; i < spawnedSprites.Count; i++)
         {
-            spawnedSprites[i].transform.LookAt(ARCamera.transform);
-            var position = spawnedSprites[i].transform.position;
-            var placementAlert = spawnedSprites[i].GetComponent<PlacementAlert>();
+            //spawnedSprites[i].transform.LookAt(ARCamera.transform);
+            var position = spawnedSprites[i];//.transform.position;
+            var placementAlert = UISprites[i].GetComponent<PlacementAlert>();
             if (placementAlert != null)
             {
                 placementAlert.setDistance(calculateDistance(position, ARCamera.transform.position));
@@ -122,6 +122,8 @@ public class ARInteraction : MonoBehaviour
             //Setting up UI Position of the 3D Placement
             var UIPosition = ARCamera.WorldToScreenPoint(hitPose.position);
 
+            Log("UI Position: " + UIPosition.ToString());
+
             //Check Hit condition here
             Ray ray = ARCamera.ScreenPointToRay(crosshairPosition);
             RaycastHit hitObject;
@@ -132,15 +134,15 @@ public class ARInteraction : MonoBehaviour
                 var placementFlag = hitObject.transform.GetComponent<PlacementFlag>();
 
                 //Updating UI Position
-                UIPosition = hitObject.transform.position;
+                UIPosition = ARCamera.WorldToScreenPoint(position);
 
                 if (placementFlag != null && placementFlag.isPinged == false)
                 {
                     //Log("[AddAlert] Position: "+position.ToString());
                     //Log("[AddAlert] Original: "+hitPose.position.ToString());
-                    spawnedSprites.Add(Instantiate(alertToInstantiate1, position, hitPose.rotation));
+                    spawnedSprites.Add(position);//Instantiate(alertToInstantiate1, position, hitPose.rotation));
                     UISprites.Add(Instantiate(UISpritePrefab1, UIPosition, Quaternion.identity));
-                    var placementAlert = spawnedSprites[spawnedSprites.Count - 1].GetComponent<PlacementAlert>();
+                    var placementAlert = UISprites[UISprites.Count - 1].GetComponent<PlacementAlert>();
                     placementFlag.isPinged = true;
                     if (placementAlert != null)
                         placementAlert.setName(placementFlag.flagName);
@@ -149,14 +151,15 @@ public class ARInteraction : MonoBehaviour
                 }
                 else
                 {
-                    spawnedSprites.Add(Instantiate(alertToInstantiate2, hitPose.position, hitPose.rotation));
+                    spawnedSprites.Add(position);//Instantiate(alertToInstantiate2, hitPose.position, hitPose.rotation));
                     UISprites.Add(Instantiate(UISpritePrefab2, UIPosition, Quaternion.identity));
                 }
             }
             else
             {
-                spawnedSprites.Add(Instantiate(alertToInstantiate2, hitPose.position, hitPose.rotation));
+                spawnedSprites.Add(hitPose.position);//Instantiate(alertToInstantiate2, hitPose.position, hitPose.rotation));
                 UISprites.Add(Instantiate(UISpritePrefab2, UIPosition, Quaternion.identity));
+                Log("Alert should have been placed! " + UIPosition.ToString() + " ");
             }
 
 
@@ -164,6 +167,7 @@ public class ARInteraction : MonoBehaviour
             //spawnedSprites[spawnedSprites.Count - 1].transform.rotation = hitPose.rotation;
             UISprites[UISprites.Count - 1].transform.SetParent(spritesAnchor.transform, false);
             UISprites[UISprites.Count - 1].transform.position = UIPosition;
+            Log("Parent have been set... UISprites Count: " + UISprites.Count.ToString());
         }
     }
 
