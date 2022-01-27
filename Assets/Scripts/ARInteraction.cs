@@ -69,10 +69,6 @@ public class ARInteraction : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-    }
-
-    void LateUpdate()
-    {
         for (int i = 0; i < spawnedSprites.Count; i++)
         {
             //spawnedSprites[i].transform.LookAt(ARCamera.transform);
@@ -87,6 +83,10 @@ public class ARInteraction : MonoBehaviour
             //Updating UI Sprite Position
             UISprites[i].transform.position = ARCamera.WorldToScreenPoint(position);
         }
+    }
+
+    void LateUpdate()
+    {
     }
 
     public void AddObject()
