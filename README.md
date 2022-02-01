@@ -22,24 +22,25 @@ Make sure you have the below requirements before starting:
 
 - [Unity Engine](https://unity.com/)
 
-- Basic Knowledge of Unity and ARFoundation
+- Unity with Android Build Support
 
 ## Mobile Requirements
 
 - Android version on the devices must be 7.0 or higher
 
-- Android devices in use for usage, testing, and demo will support ARCore and have a time-of-flight (ToF) sensor for good performance.
+- Android devices in use for usage, testing, and demo will support ARCore and have a Depth sensor for good performance.
 
-## Download
+## Clone the repository
 
-- Clone the repository locally:
-
-`$ https://github.com/tayyabejaz2000/AR-Based-Tactical-Simulator.git`
+- **HTTP**
+  > `$ git clone https://github.com/tayyabejaz2000/AR-Based-Tactical-Simulator.git`
+- **SSH**
+  > `$ git clone git@github.com:tayyabejaz2000/AR-Based-Tactical-Simulator.git`
 
 ## Credits
 
 - Game Engine: [Unity](https://unity.com/)
 
-- Graphics Development Tools: <font color="red">3ds Max, Blender, Substance Painter, Quixel Bridge</font>
+- Graphics Development Tools: [3ds Max](https://www.autodesk.com/products/3ds-max/overview), [Blender](https://www.blender.org/), [Substance Painter](https://www.adobe.com/products/substance3d-painter.html), [Quixel Bridge](https://quixel.com/bridge)
 
-- Developers: Made with :tw-2764: by **Tayyab Ejaz**, **Rao Ubaid Ullah**, and **Tanzeel Ahmed**
+- Developers: Made with ❤️ by [**Tayyab Ejaz**](https://github.com/tayyabejaz2000), [**Rao Ubaid Ullah**](https://github.com/egdose), and [**Tanzeel Ahmed**](https://github.com/Tanzeel-inline)
