@@ -37,10 +37,17 @@ Make sure you have the below requirements before starting:
 - **SSH**
   > `$ git clone git@github.com:tayyabejaz2000/AR-Based-Tactical-Simulator.git`
 
-## Credits
+## Tools
 
 - Game Engine: [Unity](https://unity.com/)
 
 - Graphics Development Tools: [3ds Max](https://www.autodesk.com/products/3ds-max/overview), [Blender](https://www.blender.org/), [Substance Painter](https://www.adobe.com/products/substance3d-painter.html), [Quixel Bridge](https://quixel.com/bridge)
 
-- Developers: Made with ❤️ by [**Tayyab Ejaz**](https://github.com/tayyabejaz2000), [**Rao Ubaid Ullah**](https://github.com/egdose), and [**Tanzeel Ahmed**](https://github.com/Tanzeel-inline)
+---
+
+<div style="text-align: right">
+Made with ❤️ by
+<a href="https://github.com/tayyabejaz2000"><b>Tayyab Ejaz</b></a>,
+<a href="https://github.com/tayyabejaz2000"><b>Rao Ubaid Ullah</b></a> and
+<a href="https://github.com/tayyabejaz2000"><b>Tanzeel Ahmed</b></a>
+</div>
