@@ -20,9 +20,5 @@ public class ARAnchorInteraction : MonoBehaviour
 
     void OnImageTracked(ARTrackedImagesChangedEventArgs eventArgs)
     {
-        foreach (var image in eventArgs.added)
-        {
-            anchorManager.AddAnchor(new Pose(image.transform.position, image.transform.rotation));
-        }
     }
 }
