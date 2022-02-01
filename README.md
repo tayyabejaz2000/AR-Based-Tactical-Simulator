@@ -26,9 +26,9 @@ Make sure you have the below requirements before starting:
 
 ## Mobile Requirements
 
-- Android version on the devices must be 7.0 or higher
+- Android Device with Android version 7.0 or higher.
 
-- Android devices in use for usage, testing, and demo will support ARCore and have a Depth sensor for good performance.
+- Android Device must support ARCore and have a Depth sensor.
 
 ## Clone the repository
 
