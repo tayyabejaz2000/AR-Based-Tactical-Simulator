@@ -48,7 +48,6 @@ public class ARInteraction : MonoBehaviour
         UISprites = new List<GameObject>();
     }
 
-    // Start is called before the first frame update
     private void Awake()
     {
         _arRaycastManager = GetComponent<ARRaycastManager>();
@@ -66,7 +65,6 @@ public class ARInteraction : MonoBehaviour
         return false;
     }
 
-    // Update is called once per frame
     void Update()
     {
         for (int i = 0; i < spawnedSprites.Count; i++)

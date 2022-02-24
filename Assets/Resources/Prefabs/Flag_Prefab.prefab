@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flagName: Objective 1
+  isPinged: 0
 --- !u!65 &8943839842879171109
 BoxCollider:
   m_ObjectHideFlags: 0
