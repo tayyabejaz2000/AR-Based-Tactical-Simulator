@@ -32,15 +32,18 @@ public class ARInteraction : MonoBehaviour
 
     //Logging Functionality
     [SerializeField]
-    Text LogText;
+    private TMPro.TextMeshProUGUI LogText;
     void Log(string message)
+    {
+        LogText.text += $"{message}";
+    }
+    void LogLn(string message)
     {
         LogText.text += $"{message}\n";
     }
 
     void Start()
     {
-
         crosshairPosition = new Vector2(1920 / 2f, 1080 / 2f);
 
         spawnedObject = new List<GameObject>();
