@@ -2,10 +2,12 @@
 using UnityEngine;
 using UnityEngine.UI;
 using Photon.Realtime;
-
-#if UNITY_ANDROID
 using UnityEngine.Android;
-#endif
+
+//This block was giving error, so commenting
+//#if UNITY_ANDROID
+//using UnityEngine.Android;
+//#endif
 
 using Photon.Pun;
 

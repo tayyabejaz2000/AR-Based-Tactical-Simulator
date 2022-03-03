@@ -33,6 +33,8 @@ public class ARInteraction : MonoBehaviour
     //Logging Functionality
     [SerializeField]
     private TMPro.TextMeshProUGUI LogText;
+
+    private Touch touch;
     void Log(string message)
     {
         LogText.text += $"{message}";
@@ -83,6 +85,21 @@ public class ARInteraction : MonoBehaviour
 
             //Updating UI Sprite Position
             UISprites[i].transform.position = ARCamera.WorldToScreenPoint(position);
+        }
+
+        if ( Input.touchCount > 0 )
+        {
+            touch = Input.GetTouch(0);
+            //Only a click, if it was slided then consider it cancelled
+            if ( touch.phase == TouchPhase.Stationary)
+            {
+                var worldC_position = ARCamera.ScreenToWorldPoint(touch.position);
+                //What do we have to compare aganist??
+                //Fix these lines
+                //var relativePosition = worldC_position - transform.position;
+                //Print it on the screen in the GUI
+                //For rotation, we need object not a plane
+            }
         }
     }
 
