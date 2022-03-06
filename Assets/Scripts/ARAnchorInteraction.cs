@@ -7,16 +7,28 @@ public class ARAnchorInteraction : MonoBehaviour
 {
     public ARTrackedImageManager imageManager;
     public GameObject flagPrefab;
-
+    public Vector3 startingPosition;
+    public Quaternion startingRotation;
+    public bool isStartingMarkerScanned;
     void Start()
     {
         //Bind `OnImageTracked` function to event ARTrackedImageManager.trackedImagesChanged
         imageManager.trackedImagesChanged += OnImageTracked;
+        isStartingMarkerScanned = false;
     }
 
     void OnStartImageTracked(GameObject parent)
     {
         //TODO: Sync position and rotation using pose of tracked image
+        //To avoid multiple scan and no scan
+        if ( isStartingMarkerScanned == false )
+        {
+            //We store the position and rotation of starting marker
+            startingPosition = transform.position;
+            startingRotation = transform.rotation;
+            //Acknowleding that we have scanned the starting marker
+            isStartingMarkerScanned = true;
+        }
     }
 
     void OnFlagImageTracked(GameObject parent)

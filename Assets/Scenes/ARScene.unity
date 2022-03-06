@@ -1071,7 +1071,7 @@ MonoBehaviour:
   buttonTwo: {fileID: 370479486}
   buttonThree: {fileID: 869450605}
   buttonBackdrop: {fileID: 386650714}
-  ARController: {fileID: 0}
+  ARController: {fileID: 1128454401}
 --- !u!1 &575530000
 GameObject:
   m_ObjectHideFlags: 0
