@@ -1,8 +1,6 @@
-using Photon.Pun;
-using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
@@ -37,11 +35,11 @@ public class ARInteraction : MonoBehaviour
     private TMPro.TextMeshProUGUI LogText;
 
     private Touch touch;
-    void Log(string message)
+    public void Log(string message)
     {
         LogText.text += $"{message}";
     }
-    void LogLn(string message)
+    public void LogLn(string message)
     {
         LogText.text += $"{message}\n";
     }
@@ -117,7 +115,7 @@ public class ARInteraction : MonoBehaviour
             //spawnedObject.Add(PhotonNetwork.Instantiate(gameObjectToInstantiate.name, hitPose.position,hitPose.rotation) );
             spawnedObject.Add(Instantiate(gameObjectToInstantiate, hitPose.position, hitPose.rotation));
             //Get the spawnedObject position relative to the scanned marker
-            if ( markerData.isStartingMarkerScanned )
+            if (markerData.isStartingMarkerScanned)
             {
                 var relativePosition = hitPose.position - markerData.startingPosition;
                 var relativeRotation = hitPose.rotation * Quaternion.Inverse(markerData.startingRotation);
@@ -161,10 +159,10 @@ public class ARInteraction : MonoBehaviour
             {
                 var position = hitObject.transform.position;
                 var placementFlag = hitObject.transform.GetComponent<PlacementFlag>();
-                
+
                 //Calculating relative position to the starting marker
                 Vector3 relativePosition = Vector3.zero;
-                if ( markerData.isStartingMarkerScanned )
+                if (markerData.isStartingMarkerScanned)
                 {
                     relativePosition = hitPose.position - markerData.startingPosition;
                     Log("UI Relative Position: " + relativePosition.ToString());
@@ -214,25 +212,10 @@ public class ARInteraction : MonoBehaviour
 
     public void RemoveObject()
     {
-        Ray ray = ARCamera.ScreenPointToRay(crosshairPosition);
-        RaycastHit hitObject;
-        int mask = 1 << 6;
-        if (Physics.Raycast(ray, out hitObject, float.MaxValue, mask))
-        {
-            var position = hitObject.transform.position;
-
-            for (int i = 0; i < spawnedObject.Count; i++)
-            {
-                Debug.Log("-------[RemoveObject]: " + "Position[" + i + "]: " + spawnedObject[i].transform.position.ToString());
-                if (spawnedObject[i].transform.position.Equals(position))
-                {
-                    var temp = spawnedObject[i];
-                    spawnedObject.RemoveAt(i);
-                    Destroy(temp);
-                    break;
-                }
-            }
-        }
+        var ray = ARCamera.ScreenPointToRay(crosshairPosition);
+        var mask = 1 << 6;
+        if (Physics.Raycast(ray, out var hitObject, float.MaxValue, mask))
+            Destroy(hitObject.collider.gameObject);
     }
 
 

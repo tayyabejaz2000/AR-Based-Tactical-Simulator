@@ -1,8 +1,6 @@
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 
-
-
 public class ARAnchorInteraction : MonoBehaviour
 {
     public ARTrackedImageManager imageManager;
@@ -10,18 +8,12 @@ public class ARAnchorInteraction : MonoBehaviour
     public Vector3 startingPosition;
     public Quaternion startingRotation;
     public bool isStartingMarkerScanned;
-    void Start()
-    {
-        //Bind `OnImageTracked` function to event ARTrackedImageManager.trackedImagesChanged
-        imageManager.trackedImagesChanged += OnImageTracked;
-        isStartingMarkerScanned = false;
-    }
 
     void OnStartImageTracked(GameObject parent)
     {
         //TODO: Sync position and rotation using pose of tracked image
         //To avoid multiple scan and no scan
-        if ( isStartingMarkerScanned == false )
+        if (isStartingMarkerScanned == false)
         {
             //We store the position and rotation of starting marker
             startingPosition = transform.position;
@@ -35,9 +27,14 @@ public class ARAnchorInteraction : MonoBehaviour
     {
         var flagObject = Instantiate(flagPrefab, parent.transform);
         //Make Flag Object stand upright
-        flagObject.transform.eulerAngles = Vector3.Scale(flagObject.transform.eulerAngles, Vector3.up);
+        flagObject.transform.rotation = Quaternion.identity;
     }
 
+    /// <summary>
+    /// Callback binded to <see cref="ARTrackedImageManager.trackedImagesChanged"/>
+    /// Called when there is an update in ARTrackedImages
+    /// </summary>
+    /// <param name="eventArgs">struct containing information about ARTrackedImages</param>
     void OnImageTracked(ARTrackedImagesChangedEventArgs eventArgs)
     {
         //TODO: Add in markers for each unique interaction
@@ -55,5 +52,12 @@ public class ARAnchorInteraction : MonoBehaviour
                     break;
             }
         }
+    }
+
+    void Start()
+    {
+        //Bind `OnImageTracked` function to event ARTrackedImageManager.trackedImagesChanged
+        imageManager.trackedImagesChanged += OnImageTracked;
+        isStartingMarkerScanned = false;
     }
 }
