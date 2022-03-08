@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,7 @@ public class ARInteraction : MonoBehaviour
     public GameObject gameObjectToInstantiate;
     public GameObject alertToInstantiate1;
     public GameObject alertToInstantiate2;
+    public ARAnchorInteraction markerData;
 
     private List<GameObject> spawnedObject;
     private List<Vector3> spawnedSprites;
@@ -33,6 +35,8 @@ public class ARInteraction : MonoBehaviour
     //Logging Functionality
     [SerializeField]
     private TMPro.TextMeshProUGUI LogText;
+
+    private Touch touch;
     void Log(string message)
     {
         LogText.text += $"{message}";
@@ -84,6 +88,21 @@ public class ARInteraction : MonoBehaviour
             //Updating UI Sprite Position
             UISprites[i].transform.position = ARCamera.WorldToScreenPoint(position);
         }
+
+        /*if ( Input.touchCount > 0 )
+        {
+            touch = Input.GetTouch(0);
+            //Only a click, if it was slided then consider it cancelled
+            if ( touch.phase == TouchPhase.Stationary)
+            {
+                var worldC_position = ARCamera.ScreenToWorldPoint(touch.position);
+                //What do we have to compare aganist??
+                //Fix these lines
+                //var relativePosition = worldC_position - transform.position;
+                //Print it on the screen in the GUI
+                //For rotation, we need object not a plane
+            }
+        }*/
     }
 
     void LateUpdate()
@@ -95,14 +114,23 @@ public class ARInteraction : MonoBehaviour
         if (_arRaycastManager.Raycast(crosshairPosition, hits, TrackableType.PlaneWithinPolygon))
         {
             var hitPose = hits[0].pose;
-
+            //spawnedObject.Add(PhotonNetwork.Instantiate(gameObjectToInstantiate.name, hitPose.position,hitPose.rotation) );
             spawnedObject.Add(Instantiate(gameObjectToInstantiate, hitPose.position, hitPose.rotation));
-
+            //Get the spawnedObject position relative to the scanned marker
+            if ( markerData.isStartingMarkerScanned )
+            {
+                var relativePosition = hitPose.position - markerData.startingPosition;
+                var relativeRotation = hitPose.rotation * Quaternion.Inverse(markerData.startingRotation);
+                Log("Relative Position: " + relativePosition.ToString());
+                Log("Relative Rotation: " + relativeRotation.ToString());
+            }
+            //
+            //TODO:Write it to other user using RPC call
+            //
             spawnedObject[spawnedObject.Count - 1].transform.position = hitPose.position;
             spawnedObject[spawnedObject.Count - 1].transform.rotation = hitPose.rotation;
 
             PlacementObject placementObject = spawnedObject[spawnedObject.Count - 1].GetComponent<PlacementObject>();
-
             if (placementObject != null)
             {
                 placementObject.index = spawnedObject.Count - 1;
@@ -133,10 +161,22 @@ public class ARInteraction : MonoBehaviour
             {
                 var position = hitObject.transform.position;
                 var placementFlag = hitObject.transform.GetComponent<PlacementFlag>();
+                
+                //Calculating relative position to the starting marker
+                Vector3 relativePosition = Vector3.zero;
+                if ( markerData.isStartingMarkerScanned )
+                {
+                    relativePosition = hitPose.position - markerData.startingPosition;
+                    Log("UI Relative Position: " + relativePosition.ToString());
+                }
+                //
+                //TODO: write the position in RPC call
+                //
+                //Maybe we have to RPC Call later in the if statement, in case we have to send objectName or identity as parameter
+                //since there are different sprites
 
                 //Updating UI Position
                 UIPosition = ARCamera.WorldToScreenPoint(position);
-
                 if (placementFlag != null && placementFlag.isPinged == false)
                 {
                     //Log("[AddAlert] Position: "+position.ToString());
