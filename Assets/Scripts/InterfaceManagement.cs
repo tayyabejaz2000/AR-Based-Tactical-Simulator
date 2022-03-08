@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class InterfaceManagement : MonoBehaviour
 {
@@ -36,17 +33,17 @@ public class InterfaceManagement : MonoBehaviour
     {
         if (buttonKey == 1)
         {
-            Debug.Log("Key: 1");
+            ARController.LogLn("Key: 1");
             ARController.AddObject();
         }
         else if (buttonKey == 2)
         {
-            Debug.Log("Key: 2");
+            ARController.LogLn("Key: 2");
             ARController.AddAlert();
         }
         else if (buttonKey == 3)
         {
-            Debug.Log("Key: 3");
+            ARController.LogLn("Key: 3");
             ARController.RemoveObject();
         }
 
