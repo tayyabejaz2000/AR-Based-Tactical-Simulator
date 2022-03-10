@@ -3,7 +3,7 @@ using TMPro;
 
 public class PlacementAlert : MonoBehaviour
 {
-    public float ttl = 2.5f;
+    public float ttl = 5.0f;
 
     [SerializeField]
     TextMeshProUGUI targetText;

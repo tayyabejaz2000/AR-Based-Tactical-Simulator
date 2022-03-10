@@ -84,7 +84,7 @@ public class ARInteraction : MonoBehaviour
     /// </summary>
     public void AddAlert()
     {
-        if (_arRaycastManager.Raycast(crosshairPosition, hits, TrackableType.PlaneWithinPolygon))
+        if (_arRaycastManager.Raycast(crosshairPosition, hits, TrackableType.PlaneWithinPolygon) && hits.Count > 0)
         {
             GameObject alertObject = null;
             var alertText = "";
