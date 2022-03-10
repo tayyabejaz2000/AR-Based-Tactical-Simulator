@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -28,13 +29,13 @@ public class ARInteraction : MonoBehaviour
     [SerializeField]
     private Camera ARCamera;
 
-    static List<ARRaycastHit> hits = new List<ARRaycastHit>();
+    List<ARRaycastHit> hits = new List<ARRaycastHit>();
 
     //Logging Functionality
     [SerializeField]
     private TMPro.TextMeshProUGUI LogText;
-
     private Touch touch;
+
     public void Log(string message)
     {
         LogText.text += $"{message}";
@@ -44,19 +45,19 @@ public class ARInteraction : MonoBehaviour
         LogText.text += $"{message}\n";
     }
 
+    void Awake()
+    {
+        _arRaycastManager = GetComponent<ARRaycastManager>();
+    }
     void Start()
     {
-        crosshairPosition = new Vector2(1920 / 2f, 1080 / 2f);
+        crosshairPosition = new Vector2(Screen.width / 2f, Screen.height / 2f);
 
         spawnedObject = new List<GameObject>();
         spawnedSprites = new List<Vector3>();
         UISprites = new List<GameObject>();
     }
 
-    private void Awake()
-    {
-        _arRaycastManager = GetComponent<ARRaycastManager>();
-    }
 
     bool TryGetTouchPosition(out Vector2 touchPosition)
     {
@@ -65,7 +66,6 @@ public class ARInteraction : MonoBehaviour
             touchPosition = Input.GetTouch(0).position;
             return true;
         }
-
         touchPosition = default;
         return false;
     }
@@ -74,37 +74,16 @@ public class ARInteraction : MonoBehaviour
     {
         for (int i = 0; i < spawnedSprites.Count; i++)
         {
-            //spawnedSprites[i].transform.LookAt(ARCamera.transform);
-            var position = spawnedSprites[i];//.transform.position;
+            var position = spawnedSprites[i];
             var placementAlert = UISprites[i].GetComponent<PlacementAlert>();
             if (placementAlert != null)
             {
                 placementAlert.setDistance(calculateDistance(position, ARCamera.transform.position));
-                //Log("[ALERT " + i.ToString() + "]" + ARCamera.WorldToScreenPoint(position).ToString());
             }
 
             //Updating UI Sprite Position
             UISprites[i].transform.position = ARCamera.WorldToScreenPoint(position);
         }
-
-        /*if ( Input.touchCount > 0 )
-        {
-            touch = Input.GetTouch(0);
-            //Only a click, if it was slided then consider it cancelled
-            if ( touch.phase == TouchPhase.Stationary)
-            {
-                var worldC_position = ARCamera.ScreenToWorldPoint(touch.position);
-                //What do we have to compare aganist??
-                //Fix these lines
-                //var relativePosition = worldC_position - transform.position;
-                //Print it on the screen in the GUI
-                //For rotation, we need object not a plane
-            }
-        }*/
-    }
-
-    void LateUpdate()
-    {
     }
 
     public void AddObject()
@@ -112,30 +91,27 @@ public class ARInteraction : MonoBehaviour
         if (_arRaycastManager.Raycast(crosshairPosition, hits, TrackableType.PlaneWithinPolygon))
         {
             var hitPose = hits[0].pose;
-            //spawnedObject.Add(PhotonNetwork.Instantiate(gameObjectToInstantiate.name, hitPose.position,hitPose.rotation) );
             spawnedObject.Add(Instantiate(gameObjectToInstantiate, hitPose.position, hitPose.rotation));
             //Get the spawnedObject position relative to the scanned marker
             if (markerData.isStartingMarkerScanned)
             {
                 var relativePosition = hitPose.position - markerData.startingPosition;
                 var relativeRotation = hitPose.rotation * Quaternion.Inverse(markerData.startingRotation);
-                Log("Relative Position: " + relativePosition.ToString());
-                Log("Relative Rotation: " + relativeRotation.ToString());
+                LogLn("Relative Position: " + relativePosition.ToString());
+                LogLn("Relative Rotation: " + relativeRotation.ToString());
             }
-            //
-            //TODO:Write it to other user using RPC call
-            //
-            spawnedObject[spawnedObject.Count - 1].transform.position = hitPose.position;
-            spawnedObject[spawnedObject.Count - 1].transform.rotation = hitPose.rotation;
 
-            PlacementObject placementObject = spawnedObject[spawnedObject.Count - 1].GetComponent<PlacementObject>();
-            if (placementObject != null)
+            ///TODO:Write it to other user using RPC call
+            spawnedObject.Last().transform.position = hitPose.position;
+            spawnedObject.Last().transform.rotation = hitPose.rotation;
+
+            if (spawnedObject.Last().TryGetComponent<PlacementObject>(out var placementObject))
             {
                 placementObject.index = spawnedObject.Count - 1;
             }
             else
             {
-                Debug.Log("-------[AddObject]: " + "Placement Object is NULL");
+                LogLn("-------[AddObject]: " + "Placement Object is NULL");
             }
         }
     }
@@ -149,64 +125,55 @@ public class ARInteraction : MonoBehaviour
             //Setting up UI Position of the 3D Placement
             var UIPosition = ARCamera.WorldToScreenPoint(hitPose.position);
 
-            Log("UI Position: " + UIPosition.ToString());
+            LogLn("UI Position: " + UIPosition.ToString());
 
             //Check Hit condition here
-            Ray ray = ARCamera.ScreenPointToRay(crosshairPosition);
-            RaycastHit hitObject;
-            int mask = 1 << 7;
-            if (Physics.Raycast(ray, out hitObject, float.MaxValue, mask))
+            var ray = ARCamera.ScreenPointToRay(crosshairPosition);
+            var mask = 1 << 7;
+            if (Physics.Raycast(ray, out var hitObject, float.MaxValue, mask))
             {
                 var position = hitObject.transform.position;
-                var placementFlag = hitObject.transform.GetComponent<PlacementFlag>();
-
-                //Calculating relative position to the starting marker
-                Vector3 relativePosition = Vector3.zero;
-                if (markerData.isStartingMarkerScanned)
-                {
-                    relativePosition = hitPose.position - markerData.startingPosition;
-                    Log("UI Relative Position: " + relativePosition.ToString());
-                }
-                //
-                //TODO: write the position in RPC call
-                //
-                //Maybe we have to RPC Call later in the if statement, in case we have to send objectName or identity as parameter
-                //since there are different sprites
 
                 //Updating UI Position
                 UIPosition = ARCamera.WorldToScreenPoint(position);
-                if (placementFlag != null && placementFlag.isPinged == false)
+                if (hitObject.transform.TryGetComponent<PlacementFlag>(out var placementFlag) && placementFlag.isPinged)
                 {
-                    //Log("[AddAlert] Position: "+position.ToString());
-                    //Log("[AddAlert] Original: "+hitPose.position.ToString());
-                    spawnedSprites.Add(position);//Instantiate(alertToInstantiate1, position, hitPose.rotation));
+                    spawnedSprites.Add(position);
                     UISprites.Add(Instantiate(UISpritePrefab1, UIPosition, Quaternion.identity));
-                    var placementAlert = UISprites[UISprites.Count - 1].GetComponent<PlacementAlert>();
-                    placementFlag.isPinged = true;
-                    if (placementAlert != null)
+                    if (UISprites.Last().TryGetComponent<PlacementAlert>(out var placementAlert))
                         placementAlert.setName(placementFlag.flagName);
                     else
-                        Log("[AddAlert] Placement Alert is NULL");
+                        LogLn("[AddAlert] Placement Alert is NULL");
+                    placementFlag.isPinged = true;
                 }
                 else
                 {
                     spawnedSprites.Add(position);//Instantiate(alertToInstantiate2, hitPose.position, hitPose.rotation));
                     UISprites.Add(Instantiate(UISpritePrefab2, UIPosition, Quaternion.identity));
                 }
+
+                //Calculating relative position to the starting marker
+                var relativePosition = Vector3.zero;
+                if (markerData.isStartingMarkerScanned)
+                {
+                    relativePosition = hitPose.position - markerData.startingPosition;
+                    LogLn("UI Relative Position: " + relativePosition.ToString());
+                }
+                ///TODO: write the position in RPC call
+
+                //Maybe we have to RPC Call later in the if statement, in case we have to send objectName or identity as parameter
+                //since there are different sprites
             }
             else
             {
-                spawnedSprites.Add(hitPose.position);//Instantiate(alertToInstantiate2, hitPose.position, hitPose.rotation));
+                spawnedSprites.Add(hitPose.position);
                 UISprites.Add(Instantiate(UISpritePrefab2, UIPosition, Quaternion.identity));
-                Log("Alert should have been placed! " + UIPosition.ToString() + " ");
+                LogLn("Alert should have been placed! " + UIPosition.ToString() + " ");
             }
 
-
-            //spawnedSprites[spawnedSprites.Count - 1].transform.position = hitPose.position;
-            //spawnedSprites[spawnedSprites.Count - 1].transform.rotation = hitPose.rotation;
-            UISprites[UISprites.Count - 1].transform.SetParent(spritesAnchor.transform, false);
-            UISprites[UISprites.Count - 1].transform.position = UIPosition;
-            Log("Parent have been set... UISprites Count: " + UISprites.Count.ToString());
+            UISprites.Last().transform.SetParent(spritesAnchor.transform, false);
+            UISprites.Last().transform.position = UIPosition;
+            LogLn("Parent have been set... UISprites Count: " + UISprites.Count.ToString());
         }
     }
 
