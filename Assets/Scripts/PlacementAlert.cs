@@ -3,7 +3,7 @@ using TMPro;
 
 public class PlacementAlert : MonoBehaviour
 {
-    float distance;
+    public float ttl = 2.5f;
 
     [SerializeField]
     TextMeshProUGUI targetText;
@@ -11,18 +11,45 @@ public class PlacementAlert : MonoBehaviour
     [SerializeField]
     TextMeshProUGUI nameText;
 
-    public void setDistance(float dist)
+    private float _distanceFromCamera;
+    public float distance
     {
-        distance = dist;
-
-        if (targetText != null)
-            targetText.text = distance.ToString("0.0") + "m";
+        get { return _distanceFromCamera; }
+        set
+        {
+            _distanceFromCamera = value;
+            if (targetText != null)
+                targetText.text = value.ToString("0.0") + "m";
+        }
     }
-    public float getDistance() { return distance; }
-
-    public void setName(string name)
+    private string _alertText;
+    public string alertText
     {
-        if (nameText != null)
-            nameText.text = name;
+        get { return _alertText; }
+        set
+        {
+            _alertText = value;
+            if (nameText != null)
+                nameText.text = value;
+        }
+    }
+
+    Camera ARCamera;
+    public Vector3 worldPosition;
+
+    void Start()
+    {
+        ARCamera = Camera.main;
+
+        distance = (worldPosition - ARCamera.transform.position).sqrMagnitude;
+    }
+
+    void LateUpdate()
+    {
+        distance = (worldPosition - ARCamera.transform.position).sqrMagnitude;
+        transform.position = ARCamera.WorldToScreenPoint(worldPosition);
+        ttl -= Time.deltaTime;
+        if (ttl <= 0.0f)
+            Destroy(gameObject);
     }
 }

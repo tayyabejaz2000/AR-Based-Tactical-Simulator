@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlacementFlag : MonoBehaviour
 {
-    public string flagName = "Enter Name Here...";
+    public string flagName = "Capture Point";
 
     public bool isPinged = false;
 }

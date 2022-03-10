@@ -13,9 +13,6 @@ public class ARInteraction : MonoBehaviour
     public GameObject alertToInstantiate2;
     public ARAnchorInteraction markerData;
 
-    private List<GameObject> spawnedObject;
-    private List<Vector3> spawnedSprites;
-    private List<GameObject> UISprites;
     [SerializeField]
     private GameObject spritesAnchor;
     [SerializeField]
@@ -36,13 +33,120 @@ public class ARInteraction : MonoBehaviour
     private TMPro.TextMeshProUGUI LogText;
     private Touch touch;
 
+    /// <summary>
+    /// Logging Utility for Mobile Devices
+    /// Logs to a UI Text Element identified by <c>LogText</c>
+    /// </summary>
+    /// <param name="message">Message to Log</param>
     public void Log(string message)
     {
         LogText.text += $"{message}";
     }
+    /// <summary>
+    /// Logging Utility for Mobile Devices
+    /// Logs to a UI Text Element with end line identified by <c>LogText</c>
+    /// </summary>
+    /// <param name="message">Message to Log</param>
     public void LogLn(string message)
     {
         LogText.text += $"{message}\n";
+    }
+
+
+    /// <summary>
+    /// Adds a 3D Ping Object in scene, binded to UI Ping Button
+    /// </summary>
+    public void AddObject()
+    {
+        if (_arRaycastManager.Raycast(crosshairPosition, hits, TrackableType.PlaneWithinPolygon) && hits.Count > 0)
+        {
+            //Get the first hit pose
+            var hitPose = hits[0].pose;
+
+            //Spawn a 3D Ping and on the hit pose in 3D
+            Instantiate(gameObjectToInstantiate, hitPose.position, hitPose.rotation);
+
+            //Get the spawnedObject position relative to the scanned marker
+            if (markerData.isStartingMarkerScanned)
+            {
+                var relativePosition = hitPose.position - markerData.startingPosition;
+                var relativeRotation = hitPose.rotation * Quaternion.Inverse(markerData.startingRotation);
+                LogLn("Relative Position: " + relativePosition.ToString());
+                LogLn("Relative Rotation: " + relativeRotation.ToString());
+            }
+            ///TODO: Broadcast the spawned ping to other players using Photon RPC
+        }
+    }
+
+    /// <summary>
+    /// Adds a UI Alert on the Canvas, binded to UI Alert Button
+    /// Dynamically spawn different Alerts on basis of Crosshair position
+    /// </summary>
+    public void AddAlert()
+    {
+        if (_arRaycastManager.Raycast(crosshairPosition, hits, TrackableType.PlaneWithinPolygon))
+        {
+            GameObject alertObject = null;
+            var alertText = "";
+
+            //World Position where the alert will spawn
+            var worldPosition = hits[0].pose.position;
+
+            var ray = ARCamera.ScreenPointToRay(crosshairPosition);
+            var mask = 1 << 7;
+            //Check Hit condition here
+            if (Physics.Raycast(ray, out var hitInfo, float.MaxValue, mask))
+            {
+                var hitObject = hitInfo.transform;
+                //If the ray hit a physics object i.e. 3D Ping, update the spawn world position
+                worldPosition = hitObject.position;
+
+                //Instantiate a 2D alert
+                alertObject = Instantiate(UISpritePrefab1, Vector3.zero, Quaternion.identity, spritesAnchor.transform);
+
+                // If the hitObject was a Capture Flag, set the text for 2D alert as <c>placementFlag.flagName</c>
+                // and mark the flag as pinged
+                if (hitObject.TryGetComponent<PlacementFlag>(out var placementFlag))
+                {
+                    alertText = placementFlag.flagName;
+                    placementFlag.isPinged = true;
+                }
+
+                //Calculating relative position to the starting marker
+                var relativePosition = Vector3.zero;
+                if (markerData.isStartingMarkerScanned)
+                {
+                    relativePosition = worldPosition - markerData.startingPosition;
+                    LogLn("UI Relative Position: " + relativePosition.ToString());
+                }
+                ///TODO: write the position in RPC call
+                //Maybe we have to RPC Call later in the if statement, in case we have to send objectName or identity as parameter
+                //since there are different sprites
+            }
+            else
+            {
+                //If no Physics Object was hit, spawn the 2nd Alert
+                alertObject = Instantiate(UISpritePrefab2, Vector3.zero, Quaternion.identity, spritesAnchor.transform);
+            }
+
+            if (alertObject.TryGetComponent<PlacementAlert>(out var placementAlert))
+            {
+                //Set the text for spawned alert
+                placementAlert.alertText = alertText;
+                //Set the 3D world position for the UI Sprite
+                placementAlert.worldPosition = worldPosition;
+            }
+        }
+    }
+    /// <summary>
+    /// Removes a 3D object from scene, binded to UI Remove Button
+    /// </summary>
+    public void RemoveObject()
+    {
+        var ray = ARCamera.ScreenPointToRay(crosshairPosition);
+        var mask = 1 << 6;
+        if (Physics.Raycast(ray, out var hitObject, float.MaxValue, mask))
+            Destroy(hitObject.collider.gameObject);
     }
 
     void Awake()
@@ -52,143 +156,5 @@ public class ARInteraction : MonoBehaviour
     void Start()
     {
         crosshairPosition = new Vector2(Screen.width / 2f, Screen.height / 2f);
-
-        spawnedObject = new List<GameObject>();
-        spawnedSprites = new List<Vector3>();
-        UISprites = new List<GameObject>();
-    }
-
-
-    bool TryGetTouchPosition(out Vector2 touchPosition)
-    {
-        if (Input.touchCount > 0)
-        {
-            touchPosition = Input.GetTouch(0).position;
-            return true;
-        }
-        touchPosition = default;
-        return false;
-    }
-
-    void Update()
-    {
-        for (int i = 0; i < spawnedSprites.Count; i++)
-        {
-            var position = spawnedSprites[i];
-            var placementAlert = UISprites[i].GetComponent<PlacementAlert>();
-            if (placementAlert != null)
-            {
-                placementAlert.setDistance(calculateDistance(position, ARCamera.transform.position));
-            }
-
-            //Updating UI Sprite Position
-            UISprites[i].transform.position = ARCamera.WorldToScreenPoint(position);
-        }
-    }
-
-    public void AddObject()
-    {
-        if (_arRaycastManager.Raycast(crosshairPosition, hits, TrackableType.PlaneWithinPolygon))
-        {
-            var hitPose = hits[0].pose;
-            spawnedObject.Add(Instantiate(gameObjectToInstantiate, hitPose.position, hitPose.rotation));
-            //Get the spawnedObject position relative to the scanned marker
-            if (markerData.isStartingMarkerScanned)
-            {
-                var relativePosition = hitPose.position - markerData.startingPosition;
-                var relativeRotation = hitPose.rotation * Quaternion.Inverse(markerData.startingRotation);
-                LogLn("Relative Position: " + relativePosition.ToString());
-                LogLn("Relative Rotation: " + relativeRotation.ToString());
-            }
-
-            ///TODO:Write it to other user using RPC call
-            spawnedObject.Last().transform.position = hitPose.position;
-            spawnedObject.Last().transform.rotation = hitPose.rotation;
-
-            if (spawnedObject.Last().TryGetComponent<PlacementObject>(out var placementObject))
-            {
-                placementObject.index = spawnedObject.Count - 1;
-            }
-            else
-            {
-                LogLn("-------[AddObject]: " + "Placement Object is NULL");
-            }
-        }
-    }
-
-    public void AddAlert()
-    {
-        if (_arRaycastManager.Raycast(crosshairPosition, hits, TrackableType.PlaneWithinPolygon))
-        {
-            var hitPose = hits[0].pose;
-
-            //Setting up UI Position of the 3D Placement
-            var UIPosition = ARCamera.WorldToScreenPoint(hitPose.position);
-
-            LogLn("UI Position: " + UIPosition.ToString());
-
-            //Check Hit condition here
-            var ray = ARCamera.ScreenPointToRay(crosshairPosition);
-            var mask = 1 << 7;
-            if (Physics.Raycast(ray, out var hitObject, float.MaxValue, mask))
-            {
-                var position = hitObject.transform.position;
-
-                //Updating UI Position
-                UIPosition = ARCamera.WorldToScreenPoint(position);
-                if (hitObject.transform.TryGetComponent<PlacementFlag>(out var placementFlag) && placementFlag.isPinged)
-                {
-                    spawnedSprites.Add(position);
-                    UISprites.Add(Instantiate(UISpritePrefab1, UIPosition, Quaternion.identity));
-                    if (UISprites.Last().TryGetComponent<PlacementAlert>(out var placementAlert))
-                        placementAlert.setName(placementFlag.flagName);
-                    else
-                        LogLn("[AddAlert] Placement Alert is NULL");
-                    placementFlag.isPinged = true;
-                }
-                else
-                {
-                    spawnedSprites.Add(position);//Instantiate(alertToInstantiate2, hitPose.position, hitPose.rotation));
-                    UISprites.Add(Instantiate(UISpritePrefab2, UIPosition, Quaternion.identity));
-                }
-
-                //Calculating relative position to the starting marker
-                var relativePosition = Vector3.zero;
-                if (markerData.isStartingMarkerScanned)
-                {
-                    relativePosition = hitPose.position - markerData.startingPosition;
-                    LogLn("UI Relative Position: " + relativePosition.ToString());
-                }
-                ///TODO: write the position in RPC call
-
-                //Maybe we have to RPC Call later in the if statement, in case we have to send objectName or identity as parameter
-                //since there are different sprites
-            }
-            else
-            {
-                spawnedSprites.Add(hitPose.position);
-                UISprites.Add(Instantiate(UISpritePrefab2, UIPosition, Quaternion.identity));
-                LogLn("Alert should have been placed! " + UIPosition.ToString() + " ");
-            }
-
-            UISprites.Last().transform.SetParent(spritesAnchor.transform, false);
-            UISprites.Last().transform.position = UIPosition;
-            LogLn("Parent have been set... UISprites Count: " + UISprites.Count.ToString());
-        }
-    }
-
-    public void RemoveObject()
-    {
-        var ray = ARCamera.ScreenPointToRay(crosshairPosition);
-        var mask = 1 << 6;
-        if (Physics.Raycast(ray, out var hitObject, float.MaxValue, mask))
-            Destroy(hitObject.collider.gameObject);
-    }
-
-
-    //Some Helper functions
-    float calculateDistance(Vector3 pointOne, Vector3 pointTwo)
-    {
-        return (pointOne - pointTwo).magnitude;
     }
 }

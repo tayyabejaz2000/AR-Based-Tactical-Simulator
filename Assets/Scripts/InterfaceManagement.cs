@@ -1,8 +1,22 @@
 using UnityEngine;
 
+/// <summary>
+/// enum to identify current UI Button State
+/// </summary>
+enum ButtonState
+{
+    None,
+    //Add a 3D ping in scene
+    AddObject,
+    //Add a 2D Alert
+    AddAlert,
+    //Remove a 3D Ping if crosshair is on the ping
+    RemoveObject,
+}
+
 public class InterfaceManagement : MonoBehaviour
 {
-    int buttonKey = -1;
+    ButtonState buttonKey = ButtonState.None;
 
     public GameObject centerButton;
     public GameObject buttonOne;
@@ -26,37 +40,44 @@ public class InterfaceManagement : MonoBehaviour
         buttonTwo.SetActive(true);
         buttonThree.SetActive(true);
         buttonBackdrop.SetActive(true);
-        buttonKey = -1;
+        buttonKey = ButtonState.None;
     }
 
     public void CenterButtonUp()
     {
-        if (buttonKey == 1)
+        switch (buttonKey)
         {
-            ARController.LogLn("Key: 1");
-            ARController.AddObject();
+            case ButtonState.AddObject:
+                ARController.AddObject();
+                break;
+            case ButtonState.AddAlert:
+                ARController.AddAlert();
+                break;
+            case ButtonState.RemoveObject:
+                ARController.RemoveObject();
+                break;
         }
-        else if (buttonKey == 2)
-        {
-            ARController.LogLn("Key: 2");
-            ARController.AddAlert();
-        }
-        else if (buttonKey == 3)
-        {
-            ARController.LogLn("Key: 3");
-            ARController.RemoveObject();
-        }
-
 
         buttonOne.SetActive(false);
         buttonTwo.SetActive(false);
         buttonThree.SetActive(false);
         buttonBackdrop.SetActive(false);
-        buttonKey = -1;
+        buttonKey = ButtonState.None;
     }
 
     public void SetButtonKey(int value)
     {
-        buttonKey = value;
+        switch (value)
+        {
+            case 1:
+                buttonKey = ButtonState.AddObject;
+                break;
+            case 2:
+                buttonKey = ButtonState.AddAlert;
+                break;
+            case 3:
+                buttonKey = ButtonState.RemoveObject;
+                break;
+        }
     }
 }

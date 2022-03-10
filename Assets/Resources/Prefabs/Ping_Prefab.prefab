@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8329853003038087498}
   - component: {fileID: 8254741007973398655}
-  - component: {fileID: 8700707235219231165}
   m_Layer: 6
   m_Name: Ping_Prefab
   m_TagString: Untagged
@@ -44,21 +43,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.18, y: 0.25, z: 0.025}
-  m_Center: {x: 0, y: -0.04, z: 0.01}
---- !u!114 &8700707235219231165
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5011692246564093953}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 152368cf36d7bc54d8efac6a2ccfb5fd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  index: -1
+  m_Size: {x: 0.16652101, y: 0.24663025, z: 0.023315132}
+  m_Center: {x: -0.00028081238, y: -0.04015614, z: 0.010842435}
 --- !u!1 &5405979636566269800
 GameObject:
   m_ObjectHideFlags: 0
@@ -107,7 +93,7 @@ MeshRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5405979636566269800}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_MotionVectors: 1
