@@ -23,7 +23,6 @@ public class ARInteraction : MonoBehaviour
     private Vector2 touchPosition;
     private Vector2 crosshairPosition;
 
-    [SerializeField]
     private Camera ARCamera;
 
     List<ARRaycastHit> hits = new List<ARRaycastHit>();
@@ -155,6 +154,7 @@ public class ARInteraction : MonoBehaviour
     }
     void Start()
     {
+        ARCamera = Camera.main;
         crosshairPosition = new Vector2(Screen.width / 2f, Screen.height / 2f);
     }
 }
