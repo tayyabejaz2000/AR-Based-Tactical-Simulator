@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8329853003038087498}
   - component: {fileID: 8254741007973398655}
+  - component: {fileID: 2967163831706848568}
+  - component: {fileID: 4783126373116497358}
   m_Layer: 6
   m_Name: Ping_Prefab
   m_TagString: Untagged
@@ -45,6 +47,40 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.16652101, y: 0.24663025, z: 0.023315132}
   m_Center: {x: -0.00028081238, y: -0.04015614, z: 0.010842435}
+--- !u!114 &2967163831706848568
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5011692246564093953}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc345f21b5dbde0479b2d51bc1582d64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &4783126373116497358
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5011692246564093953}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &5405979636566269800
 GameObject:
   m_ObjectHideFlags: 0
