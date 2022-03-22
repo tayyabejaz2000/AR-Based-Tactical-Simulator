@@ -35,13 +35,3 @@ MonoBehaviour:
     m_SpecifySize: 0
     m_Name: Marker-1
     m_Texture: {fileID: 2800000, guid: 1dcf64b80495e474a9839982eccec0c1, type: 3}
-  - m_SerializedGuid:
-      m_GuidLow: 5420481417665982680
-      m_GuidHigh: 9569309856130038713
-    m_SerializedTextureGuid:
-      m_GuidLow: 16128697013546842227
-      m_GuidHigh: 65428163597639851
-    m_Size: {x: 0, y: 0}
-    m_SpecifySize: 0
-    m_Name: Start-Marker
-    m_Texture: {fileID: 2800000, guid: f65cf873a47adfd4ab208b719172e800, type: 3}
