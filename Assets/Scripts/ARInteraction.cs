@@ -1,19 +1,17 @@
+using System.Linq;
 using System.Collections.Generic;
 
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
-using Photon.Pun;
 
 [RequireComponent(typeof(ARRaycastManager))]
 public class ARInteraction : MonoBehaviour
 {
     public GameObject gameObjectToInstantiate;
-    public string gameObjectToInstantiatePath;
     public GameObject alertToInstantiate1;
     public GameObject alertToInstantiate2;
     public ARAnchorInteraction markerData;
-    private ARSessionOrigin sessionOrigin;
 
     [SerializeField]
     private GameObject spritesAnchor;
@@ -65,7 +63,7 @@ public class ARInteraction : MonoBehaviour
             var hitPose = hits[0].pose;
 
             //Spawn a 3D Ping and on the hit pose in 3D
-            PhotonNetwork.Instantiate(gameObjectToInstantiatePath, hitPose.position, hitPose.rotation);
+            Instantiate(gameObjectToInstantiate, hitPose.position, hitPose.rotation);
 
             //Get the spawnedObject position relative to the scanned marker
             if (markerData.isStartingMarkerScanned)
@@ -147,7 +145,7 @@ public class ARInteraction : MonoBehaviour
         var ray = ARCamera.ScreenPointToRay(crosshairPosition);
         var mask = 1 << 6;
         if (Physics.Raycast(ray, out var hitObject, float.MaxValue, mask))
-            PhotonNetwork.Destroy(hitObject.collider.GetComponent<PhotonView>());
+            Destroy(hitObject.collider.gameObject);
     }
 
     void Awake()
@@ -156,7 +154,6 @@ public class ARInteraction : MonoBehaviour
     }
     void Start()
     {
-        sessionOrigin = GetComponent<ARSessionOrigin>();
         ARCamera = Camera.main;
         crosshairPosition = new Vector2(Screen.width / 2f, Screen.height / 2f);
     }
