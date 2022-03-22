@@ -70,8 +70,14 @@ public class ARInteraction : MonoBehaviour
             {
                 var relativePosition = hitPose.position - markerData.startingPosition;
                 var relativeRotation = hitPose.rotation * Quaternion.Inverse(markerData.startingRotation);
-                LogLn("Relative Position: " + relativePosition.ToString());
-                LogLn("Relative Rotation: " + relativeRotation.ToString());
+                //LogLn("Relative Position: " + relativePosition.ToString());
+                //LogLn("Relative Rotation: " + relativeRotation.ToString());
+                Debug.Log("Relative Position: " + relativePosition.ToString());
+                Debug.Log("Relative Rotation: " + relativeRotation.ToString());
+            }
+            else
+            {
+                Debug.Log("Starting marker not scanned");
             }
             ///TODO: Broadcast the spawned ping to other players using Photon RPC
         }
@@ -116,7 +122,12 @@ public class ARInteraction : MonoBehaviour
                 if (markerData.isStartingMarkerScanned)
                 {
                     relativePosition = worldPosition - markerData.startingPosition;
-                    LogLn("UI Relative Position: " + relativePosition.ToString());
+                    //LogLn("UI Relative Position: " + relativePosition.ToString());
+                    Debug.Log("UI Relative Position: " + relativePosition.ToString());
+                }
+                else
+                {
+                    Debug.Log("Starting marker not scanned");
                 }
                 ///TODO: write the position in RPC call
                 //Maybe we have to RPC Call later in the if statement, in case we have to send objectName or identity as parameter
