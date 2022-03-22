@@ -9,15 +9,15 @@ public class ARAnchorInteraction : MonoBehaviour
     public Quaternion startingRotation;
     public bool isStartingMarkerScanned;
 
-    void OnStartImageTracked()
+    void OnStartImageTracked(GameObject parent)
     {
         //TODO: Sync position and rotation using pose of tracked image
         //To avoid multiple scan and no scan
         if (isStartingMarkerScanned == false)
         {
             //We store the position and rotation of starting marker
-            startingPosition = transform.position;
-            startingRotation = transform.rotation;
+            startingPosition = parent.transform.position;
+            startingRotation = parent.transform.rotation;
             //Acknowleding that we have scanned the starting marker
             isStartingMarkerScanned = true;
         }
@@ -49,7 +49,7 @@ public class ARAnchorInteraction : MonoBehaviour
 
                 case "Start-Marker":
                     //In-case of Start-Marker, store it's position and rotation in real world
-                    OnStartImageTracked();
+                    OnStartImageTracked(image.gameObject);
                     break;
             }
         }
