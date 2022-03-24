@@ -34,21 +34,22 @@ public class ARAnchorInteraction : MonoBehaviour
 
     void OnGUI()
     {
+        GUI.skin.label.fontSize = 12;
         GUILayout.BeginArea(new Rect(50, 0, 500, Screen.height));
         GUILayout.Label("\n" + string.Join("\n", myLogQueue.ToArray()));
         GUILayout.EndArea();
     }
-    void OnStartImageTracked(GameObject parent)
+    void OnStartImageTracked(GameObject img)
     {
         //TODO: Sync position and rotation using pose of tracked image
         //To avoid multiple scan and no scan
         if (isStartingMarkerScanned == false)
         {
             //We store the position and rotation of starting marker
-            startingPosition = parent.transform.position;
-            startingRotation = parent.transform.rotation;
-            Debug.Log("Start-Marker-Position: " + parent.transform.position.ToString());
-            Debug.Log("Start-Marker-Rotation: " + parent.transform.rotation.ToString());
+            startingPosition = img.transform.position;
+            startingRotation = img.transform.rotation;
+            Debug.Log("Start-Marker-Position: " + img.transform.position.ToString());
+            Debug.Log("Start-Marker-Rotation: " + img.transform.rotation.ToString());
             //Acknowleding that we have scanned the starting marker
             isStartingMarkerScanned = true;
         }
@@ -56,6 +57,8 @@ public class ARAnchorInteraction : MonoBehaviour
 
     void OnFlagImageTracked(GameObject parent)
     {
+        Debug.Log("Marker-1-Position: " + parent.transform.position.ToString());
+        Debug.Log("Marker-1-Rotation: " + parent.transform.rotation.ToString());
         var flagObject = Instantiate(flagPrefab, parent.transform);
         //Make Flag Object stand upright
         flagObject.transform.rotation = Quaternion.identity;
@@ -79,11 +82,11 @@ public class ARAnchorInteraction : MonoBehaviour
                     OnFlagImageTracked(image.gameObject);
                     break;
 
-                case "Start-Marker":
-                    Debug.Log("Case: Start-Marker 1");
+                //case "Start-Marker":
+                    //Debug.Log("Case: Start-Marker 1");
                     //In-case of Start-Marker, store it's position and rotation in real world
-                    OnStartImageTracked(image.gameObject);
-                    break;
+                    //OnStartImageTracked(image.gameObject);
+                    //break;
             }
         }
     }

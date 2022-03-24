@@ -14,17 +14,31 @@ enum ButtonState
     RemoveObject,
 }
 
+
 public class InterfaceManagement : MonoBehaviour
 {
     ButtonState buttonKey = ButtonState.None;
 
+    //Button GameObjects
     public GameObject centerButton;
     public GameObject buttonOne;
     public GameObject buttonTwo;
     public GameObject buttonThree;
     public GameObject buttonBackdrop;
+    public GameObject originButton;
 
+    //Text GameObject
+    public GameObject topLeft;
+    public GameObject topRight;
+    public GameObject bottomLeft;
+    public GameObject bottomRight;
+
+    //Scan Button Variable
+    int pointScanned;
+
+    
     public ARInteraction ARController;
+
 
     void Start()
     {
@@ -32,6 +46,12 @@ public class InterfaceManagement : MonoBehaviour
         buttonTwo.SetActive(false);
         buttonThree.SetActive(false);
         buttonBackdrop.SetActive(false);
+
+        topRight.SetActive(false);
+        bottomLeft.SetActive(false);
+        bottomRight.SetActive(false);
+
+        pointScanned = 1;
     }
 
     public void CenterButtonDown()
@@ -78,6 +98,36 @@ public class InterfaceManagement : MonoBehaviour
             case 3:
                 buttonKey = ButtonState.RemoveObject;
                 break;
+        }
+    }
+
+    public void PointScanner()
+    {
+        Debug.Log("Scanned Button Triggered");
+        pointScanned = ARController.GetMarkerPoint();
+        PointText();
+    }
+    void PointText()
+    {
+        if ( pointScanned == 1 )
+        {
+            topLeft.SetActive(false);
+            topRight.SetActive(true);
+        }
+        else if ( pointScanned == 2 )
+        {
+            topRight.SetActive(false);
+            bottomLeft.SetActive(true);
+        }
+        else if ( pointScanned == 3 )
+        {
+            bottomLeft.SetActive(false);
+            bottomRight.SetActive(true);
+        }
+        else if ( pointScanned == 4 )
+        {
+            bottomRight.SetActive(false);
+            originButton.SetActive(false);
         }
     }
 }

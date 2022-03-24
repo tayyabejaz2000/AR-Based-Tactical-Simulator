@@ -26,22 +26,22 @@ MonoBehaviour:
     m_Name: Box
     m_Texture: {fileID: 2800000, guid: e68a272fdfe989b41bd6006ca4b92e8b, type: 3}
   - m_SerializedGuid:
-      m_GuidLow: 5345974908080636699
-      m_GuidHigh: 2811408555208533632
+      m_GuidLow: 5504762892804587511
+      m_GuidHigh: 9774048217123146414
     m_SerializedTextureGuid:
-      m_GuidLow: 16461787576442774712
-      m_GuidHigh: 13961386360047240105
-    m_Size: {x: 0.20997, y: 0.29700595}
-    m_SpecifySize: 0
-    m_Name: Marker-1
-    m_Texture: {fileID: 2800000, guid: 1dcf64b80495e474a9839982eccec0c1, type: 3}
-  - m_SerializedGuid:
-      m_GuidLow: 5701897890659096822
-      m_GuidHigh: 7539847646090188466
-    m_SerializedTextureGuid:
-      m_GuidLow: 5684678964943884027
-      m_GuidHigh: 13153961599885394075
+      m_GuidLow: 1406299489361334849
+      m_GuidHigh: 6127188331283085962
     m_Size: {x: 0, y: 0}
     m_SpecifySize: 0
     m_Name: Start-Marker
-    m_Texture: {fileID: 2800000, guid: 5f9d8efb09664ee49b404ce661428cb6, type: 3}
+    m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 5177019281896073857
+      m_GuidHigh: 4777959665305647267
+    m_SerializedTextureGuid:
+      m_GuidLow: 16461787576442774712
+      m_GuidHigh: 13961386360047240105
+    m_Size: {x: 0, y: 0}
+    m_SpecifySize: 0
+    m_Name: Marker-1
+    m_Texture: {fileID: 2800000, guid: 1dcf64b80495e474a9839982eccec0c1, type: 3}

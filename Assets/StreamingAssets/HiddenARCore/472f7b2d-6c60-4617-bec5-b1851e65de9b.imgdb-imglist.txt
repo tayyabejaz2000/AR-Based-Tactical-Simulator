@@ -1,3 +1,0 @@
-140d1626a17b4a7190c0b31385691677|C:\Users\adeel\Desktop\Unity\AR-Based-Tactical-Simulator\Assets\Images\Markers\Box.jpg|0.205
-ce4c431bb7da4a3080e6b27b2f210427|C:\Users\adeel\Desktop\Unity\AR-Based-Tactical-Simulator\Assets\Images\Markers\Marker-1.png
-ee48d8f635eb4f21b256c57d7ceba268|C:\Users\adeel\Desktop\Unity\AR-Based-Tactical-Simulator\Assets\Images\Markers\Start-Marker.jpg
