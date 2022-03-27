@@ -12,6 +12,7 @@ public class ARInteraction : MonoBehaviour
     public GameObject alertToInstantiate1;
     public GameObject alertToInstantiate2;
 
+
     [SerializeField]
     private GameObject spritesAnchor;
     [SerializeField]
@@ -68,7 +69,7 @@ public class ARInteraction : MonoBehaviour
             var hitPose = hits[0].pose;
 
             //Spawn a 3D Ping and on the hit pose in 3D
-            Instantiate(gameObjectToInstantiate, hitPose.position, hitPose.rotation);
+            Instantiate(gameObjectToInstantiate, hitPose.position, hitPose.rotation, GameObject.Find("ScenarioObjects").transform);
         }
     }
 
@@ -131,6 +132,21 @@ public class ARInteraction : MonoBehaviour
         if (Physics.Raycast(ray, out var hitObject, float.MaxValue, mask))
             Destroy(hitObject.collider.gameObject);
     }
+
+    public void SyncScenarioObjects()
+    {
+        if (_arRaycastManager.Raycast(crosshairPosition, hits, TrackableType.PlaneWithinPolygon) && hits.Count > 0)
+        {
+            var hitPose = hits[0].pose;
+            var scenarioObjects = GameObject.Find("ScenarioObjects");
+            scenarioObjects.transform.position = hitPose.position;
+            scenarioObjects.transform.eulerAngles = Vector3.Scale(hitPose.rotation.eulerAngles, Vector3.up);
+
+            Camera.main.transform.parent.position = hitPose.position;
+            Camera.main.transform.parent.eulerAngles = Vector3.Scale(hitPose.rotation.eulerAngles, Vector3.up);
+        }
+    }
+
     /// <summary>
     /// Stores the position and rotation of scanned marker
     /// </summary>
@@ -149,7 +165,7 @@ public class ARInteraction : MonoBehaviour
         }
 
         Debug.Log("Marker Position Count: " + markerPointPosition.Count.ToString());
-        if ( markerPointPosition.Count == 4 )
+        if (markerPointPosition.Count == 4)
         {
             Debug.Log("Calculating Position centroid");
             positionCentroid = CalculatePositionCentroid();
@@ -167,7 +183,7 @@ public class ARInteraction : MonoBehaviour
     Vector3 CalculatePositionCentroid()
     {
         Vector3 centroid = Vector3.zero;
-        for ( int i = 0; i < markerPointPosition.Count; i++ )
+        for (int i = 0; i < markerPointPosition.Count; i++)
         {
             centroid += markerPointPosition[i];
         }
@@ -175,7 +191,7 @@ public class ARInteraction : MonoBehaviour
         return centroid;
     }
     /// <summary>
-    ///     Interpolate the rotation of 4 points
+    /// Interpolate the rotation of 4 points
     /// </summary>
     /// <returns>Returns the centroid interpolated rotation of 4 points</returns>
     Quaternion InterpolateRotationCentroid()
@@ -198,5 +214,4 @@ public class ARInteraction : MonoBehaviour
         markerPointPosition = new List<Vector3>();
         markerPointRotation = new List<Quaternion>();
     }
-    
 }

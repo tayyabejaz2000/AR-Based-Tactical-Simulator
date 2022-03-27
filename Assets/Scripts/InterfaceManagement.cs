@@ -36,7 +36,7 @@ public class InterfaceManagement : MonoBehaviour
     //Scan Button Variable
     int pointScanned;
 
-    
+
     public ARInteraction ARController;
 
 
@@ -101,6 +101,12 @@ public class InterfaceManagement : MonoBehaviour
         }
     }
 
+    public void SyncOrigin()
+    {
+        Debug.Log("Syncing Origin");
+        ARController.SyncScenarioObjects();
+    }
+
     public void PointScanner()
     {
         Debug.Log("Scanned Button Triggered");
@@ -109,22 +115,22 @@ public class InterfaceManagement : MonoBehaviour
     }
     void PointText()
     {
-        if ( pointScanned == 1 )
+        if (pointScanned == 1)
         {
             topLeft.SetActive(false);
             topRight.SetActive(true);
         }
-        else if ( pointScanned == 2 )
+        else if (pointScanned == 2)
         {
             topRight.SetActive(false);
             bottomLeft.SetActive(true);
         }
-        else if ( pointScanned == 3 )
+        else if (pointScanned == 3)
         {
             bottomLeft.SetActive(false);
             bottomRight.SetActive(true);
         }
-        else if ( pointScanned == 4 )
+        else if (pointScanned == 4)
         {
             bottomRight.SetActive(false);
             originButton.SetActive(false);

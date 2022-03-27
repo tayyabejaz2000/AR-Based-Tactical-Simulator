@@ -1,5 +1,6 @@
 using UnityEngine;
 using Photon.Pun;
+using UnityEngine.XR.ARFoundation;
 public class PhotonNetworkingManager : MonoBehaviourPunCallbacks
 {
     GameObject ARPlayerObject;

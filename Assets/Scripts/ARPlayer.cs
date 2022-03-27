@@ -39,6 +39,11 @@ public class ARPlayer : MonoBehaviour
 
         if (photonView.IsMine)
         {
+            gameObject.GetComponent<Camera>().enabled = true;
+            gameObject.GetComponent<ARPoseDriver>().enabled = true;
+            gameObject.GetComponent<ARCameraManager>().enabled = true;
+            gameObject.GetComponent<ARCameraBackground>().enabled = true;
+
             GameObject.Find("ARCore Extensions").GetComponent<ARCoreExtensions>().CameraManager = GetComponent<ARCameraManager>();
             GetComponentInParent<ARSessionOrigin>().camera = GetComponent<Camera>();
         }
