@@ -5,12 +5,14 @@ using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
+
 [RequireComponent(typeof(ARRaycastManager))]
 public class ARInteraction : MonoBehaviour
 {
     public GameObject gameObjectToInstantiate;
     public GameObject alertToInstantiate1;
     public GameObject alertToInstantiate2;
+    public GameObject flagToInstantiate;
 
 
     [SerializeField]
@@ -33,10 +35,13 @@ public class ARInteraction : MonoBehaviour
     Vector3 positionCentroid;
     Quaternion rotationCentroid;
 
+    //Sample Scenario List
+    List<Vector3> objectiveWorldPosition;
+    List<Quaternion> objectiveWorldRotation;
+
     //Logging Functionality
     [SerializeField]
     private TMPro.TextMeshProUGUI LogText;
-    private Touch touch;
 
     /// <summary>
     /// Logging Utility for Mobile Devices
@@ -67,6 +72,10 @@ public class ARInteraction : MonoBehaviour
         {
             //Get the first hit pose
             var hitPose = hits[0].pose;
+
+            //Just for hard coding the sample scenario
+            Debug.Log("HitPose Position: " + hitPose.position);
+            Debug.Log("HitPose Rotation: " + hitPose.rotation);
 
             //Spawn a 3D Ping and on the hit pose in 3D
             Instantiate(gameObjectToInstantiate, hitPose.position, hitPose.rotation, GameObject.Find("ScenarioObjects").transform);
@@ -203,15 +212,51 @@ public class ARInteraction : MonoBehaviour
         //Interpolate to centroid by interpolating to mid of top mid-point and bottom mid-point
         return Quaternion.Lerp(firstMidPoint, secondMidPoint, 0.5f);
     }
+
+    public void AddObjectiveToScenario()
+    {
+        //Add the objectives to scenario
+        for (int i = 0; i < objectiveWorldPosition.Count; i++)
+        {
+            Instantiate(flagToInstantiate, objectiveWorldPosition[i] * 2, objectiveWorldRotation[i], GameObject.Find("ScenarioObjects").transform);
+        }
+    }
     void Awake()
     {
         _arRaycastManager = GetComponent<ARRaycastManager>();
     }
     void Start()
     {
-        ARCamera = Camera.main;
+        ARCamera = FindObjectOfType<ARCameraManager>().GetComponent<Camera>() ;
+        //ARCamera = GameObject.Find("AR Camera(Clone)").GetComponent<Camera>();
+        //ARCamera = Camera.main
+        if ( ARCamera == null )
+        {
+            Application.Quit(0);
+        }
+
         crosshairPosition = new Vector2(Screen.width / 2f, Screen.height / 2f);
         markerPointPosition = new List<Vector3>();
         markerPointRotation = new List<Quaternion>();
+
+        objectiveWorldPosition = new List<Vector3>();
+        objectiveWorldRotation = new List<Quaternion>();
+        //Append sample scenario objective here
+        objectiveWorldPosition.Add(new Vector3(-0.1f, -2.0f, 0.6f));
+        objectiveWorldRotation.Add(new Quaternion(0.0f, -0.1f, 0.0f, 1.0f));
+
+        objectiveWorldPosition.Add(new Vector3(-0.4f, -2.0f, 0.4f));
+        objectiveWorldRotation.Add(new Quaternion(0.0f, -0.3f, 0.0f, 0.9f));
+
+        objectiveWorldPosition.Add(new Vector3(0.3f, -2.0f, 0.6f));
+        objectiveWorldRotation.Add(new Quaternion(0.0f, 0.1f, 0.0f, 1.0f));
+
+        objectiveWorldPosition.Add(new Vector3(-0.2f, -2.0f, 1.1f));
+        objectiveWorldRotation.Add(new Quaternion(0.0f, -0.1f, 0.0f, 1.0f));
+
+        objectiveWorldPosition.Add(new Vector3(1.6f, -1.9f, -0.1f));
+        objectiveWorldRotation.Add(new Quaternion(0.0f, 0.6f, 0.0f, 0.8f));
+
+        
     }
 }

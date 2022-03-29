@@ -6,6 +6,6 @@ public class PhotonNetworkingManager : MonoBehaviourPunCallbacks
     GameObject ARPlayerObject;
     void Awake()
     {
-        PhotonNetwork.Instantiate("Prefabs/AR Camera", Vector3.zero, Quaternion.identity);
+        ARPlayerObject = PhotonNetwork.Instantiate("Prefabs/AR Camera", Vector3.zero, Quaternion.identity);
     }
 }
