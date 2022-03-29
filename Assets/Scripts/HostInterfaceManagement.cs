@@ -1,0 +1,88 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+enum ButtonStateHost
+{
+    None,
+    //Add a 3D ping in scene
+    AddFlag,
+    //Add a 2D Alert
+    AddBomb,
+    //Remove a 3D Ping if crosshair is on the ping
+    RemoveObjective,
+}
+
+public class HostInterfaceManagement : MonoBehaviour
+{
+    ButtonStateHost buttonKey = ButtonStateHost.None;
+
+    //Button GameObjects
+    public GameObject centerButton;
+    public GameObject buttonBomb;
+    public GameObject buttonFlag;
+    public GameObject buttonDestroy;
+    public GameObject buttonBackdrop;
+
+    public ARInteraction ARController;
+
+    void Start()
+    {
+        buttonBomb.SetActive(false);
+        buttonFlag.SetActive(false);
+        buttonDestroy.SetActive(false);
+        buttonBackdrop.SetActive(false);
+    }
+
+    public void CenterButtonDown()
+    {
+        buttonBomb.SetActive(true);
+        buttonFlag.SetActive(true);
+        buttonDestroy.SetActive(true);
+        buttonBackdrop.SetActive(true);
+        buttonKey = ButtonStateHost.None;
+        Debug.Log("Button Clicked");
+    }
+
+    public void CenterButtonUp()
+    {
+        switch (buttonKey)
+        {
+            case ButtonStateHost.AddBomb:
+                Debug.Log("Add Bomb Pushed");
+                //ARController.AddObject();
+                break;
+            case ButtonStateHost.AddFlag:
+                Debug.Log("Add Flag Pushed");
+                //ARController.AddAlert();
+                break;
+            case ButtonStateHost.RemoveObjective:
+                Debug.Log("Remove Object Pushed");
+                //ARController.RemoveObject();
+                break;
+        }
+
+        buttonBomb.SetActive(false);
+        buttonFlag.SetActive(false);
+        buttonDestroy.SetActive(false);
+        buttonBackdrop.SetActive(false);
+        buttonKey = ButtonStateHost.None;
+    }
+
+    public void SetButtonKey(int value)
+    {
+        Debug.Log("Value is : " + value.ToString());
+        switch (value)
+        {
+            case 1:
+                buttonKey = ButtonStateHost.AddFlag;
+                break;
+            case 2:
+                buttonKey = ButtonStateHost.AddBomb;
+                break;
+            case 3:
+                buttonKey = ButtonStateHost.RemoveObjective;
+                break;
+        }
+    }
+}

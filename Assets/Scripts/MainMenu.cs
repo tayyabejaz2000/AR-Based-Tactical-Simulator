@@ -29,7 +29,10 @@ public class MainMenu : MonoBehaviourPunCallbacks
         if (!Permission.HasUserAuthorizedPermission(Permission.Camera))
             Permission.RequestUserPermission(Permission.Camera);
     }
-
+    /// <summary>
+    /// Returns number of players currently present in the room
+    /// </summary>
+    public uint GetPlayersCount() { return playerInRoom;  }
     /// <summary>
     /// Connect To Photon Servers using Available PhotonNetwork Settings
     /// </summary>
