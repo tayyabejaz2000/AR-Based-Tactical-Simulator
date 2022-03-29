@@ -1,5 +1,8 @@
-using UnityEngine;
 using TMPro;
+
+using UnityEngine;
+
+using Photon.Pun;
 
 public class PlacementAlert : MonoBehaviour
 {
@@ -11,8 +14,8 @@ public class PlacementAlert : MonoBehaviour
     [SerializeField]
     TextMeshProUGUI nameText;
 
-    private float _distanceFromCamera;
-    public float distance
+    float _distanceFromCamera;
+    float distance
     {
         get { return _distanceFromCamera; }
         set
@@ -22,8 +25,8 @@ public class PlacementAlert : MonoBehaviour
                 targetText.text = value.ToString("0.0") + "m";
         }
     }
-    private string _alertText;
-    public string alertText
+    string _alertText;
+    string alertText
     {
         get { return _alertText; }
         set
@@ -35,7 +38,18 @@ public class PlacementAlert : MonoBehaviour
     }
 
     Camera ARCamera;
-    public Vector3 worldPosition;
+    Vector3 worldPosition;
+
+
+    public void SetData(string alertText, Vector3 worldPosition)
+    {
+        GetComponent<PhotonView>().RPC("SetDataRPC", RpcTarget.All, alertText, worldPosition);
+    }
+
+    void Awake()
+    {
+        transform.parent = GameObject.Find("Sprites").transform;
+    }
 
     void Start()
     {
@@ -51,5 +65,11 @@ public class PlacementAlert : MonoBehaviour
         ttl -= Time.deltaTime;
         if (ttl <= 0.0f)
             Destroy(gameObject);
+    }
+
+    void SetDataRPC(string text, Vector3 worldPos)
+    {
+        worldPosition = worldPos;
+        alertText = text;
     }
 }

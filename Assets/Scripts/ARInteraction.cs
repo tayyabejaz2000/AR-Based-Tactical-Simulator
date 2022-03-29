@@ -1,5 +1,6 @@
-using System.Linq;
 using System.Collections.Generic;
+
+using Photon.Pun;
 
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
@@ -9,20 +10,12 @@ using UnityEngine.XR.ARSubsystems;
 [RequireComponent(typeof(ARRaycastManager))]
 public class ARInteraction : MonoBehaviour
 {
-    public GameObject gameObjectToInstantiate;
-    public GameObject alertToInstantiate1;
-    public GameObject alertToInstantiate2;
-    public GameObject flagToInstantiate;
+    public string objectPrefabPath = "Prefabs/Ping_Prefab";
 
 
-    [SerializeField]
-    private GameObject spritesAnchor;
-    [SerializeField]
-    private GameObject UISpritePrefab1;
-    [SerializeField]
-    private GameObject UISpritePrefab2;
+    public string UISpritePrefabPath1 = "Prefabs/Alert-1";
+    public string UISpritePrefabPath2 = "Prefabs/Alert-2";
     private ARRaycastManager _arRaycastManager;
-    private Vector2 touchPosition;
     private Vector2 crosshairPosition;
 
     private Camera ARCamera;
@@ -38,29 +31,6 @@ public class ARInteraction : MonoBehaviour
     //Sample Scenario List
     List<Vector3> objectiveWorldPosition;
     List<Quaternion> objectiveWorldRotation;
-
-    //Logging Functionality
-    [SerializeField]
-    private TMPro.TextMeshProUGUI LogText;
-
-    /// <summary>
-    /// Logging Utility for Mobile Devices
-    /// Logs to a UI Text Element identified by <c>LogText</c>
-    /// </summary>
-    /// <param name="message">Message to Log</param>
-    public void Log(string message)
-    {
-        LogText.text += $"{message}";
-    }
-    /// <summary>
-    /// Logging Utility for Mobile Devices
-    /// Logs to a UI Text Element with end line identified by <c>LogText</c>
-    /// </summary>
-    /// <param name="message">Message to Log</param>
-    public void LogLn(string message)
-    {
-        LogText.text += $"{message}\n";
-    }
 
 
     /// <summary>
@@ -78,7 +48,7 @@ public class ARInteraction : MonoBehaviour
             Debug.Log("HitPose Rotation: " + hitPose.rotation);
 
             //Spawn a 3D Ping and on the hit pose in 3D
-            Instantiate(gameObjectToInstantiate, hitPose.position, hitPose.rotation, GameObject.Find("ScenarioObjects").transform);
+            PhotonNetwork.Instantiate(objectPrefabPath, hitPose.position, hitPose.rotation);
         }
     }
 
@@ -112,21 +82,19 @@ public class ARInteraction : MonoBehaviour
                     alertText = placementFlag.flagName;
                     placementFlag.isPinged = true;
                     //Instantiate a 2D alert
-                    alertObject = Instantiate(UISpritePrefab1, Vector3.zero, Quaternion.identity, spritesAnchor.transform);
+                    alertObject = PhotonNetwork.Instantiate(UISpritePrefabPath1, Vector3.zero, Quaternion.identity);
                 }
             }
             else
             {
                 //If no Physics Object was hit, spawn the 2nd Alert
-                alertObject = Instantiate(UISpritePrefab2, Vector3.zero, Quaternion.identity, spritesAnchor.transform);
+                alertObject = PhotonNetwork.Instantiate(UISpritePrefabPath2, Vector3.zero, Quaternion.identity);
             }
 
             if (alertObject.TryGetComponent<PlacementAlert>(out var placementAlert))
             {
-                //Set the text for spawned alert
-                placementAlert.alertText = alertText;
-                //Set the 3D world position for the UI Sprite
-                placementAlert.worldPosition = worldPosition;
+                //Set the text for spawned alert and the 3D world position for the UI Sprite
+                placementAlert.SetData(alertText, worldPosition);
             }
         }
     }
@@ -217,11 +185,8 @@ public class ARInteraction : MonoBehaviour
         //Add the objectives to scenario
         for (int i = 0; i < objectiveWorldPosition.Count; i++)
         {
-            var temp = Instantiate(flagToInstantiate);
-            var temp_parent = GameObject.Find("ScenarioObjects");
-            temp.transform.parent = temp_parent.transform;
-            temp.transform.localPosition = objectiveWorldPosition[i];
-            temp.transform.localRotation = objectiveWorldRotation[i];
+            var flag = PhotonNetwork.Instantiate("", Vector3.zero, Quaternion.identity);
+            flag.GetComponent<PlacementFlag>().SetPose(objectiveWorldPosition[i], objectiveWorldRotation[i]);
         }
     }
     void Awake()
@@ -230,10 +195,10 @@ public class ARInteraction : MonoBehaviour
     }
     void Start()
     {
-        ARCamera = FindObjectOfType<ARCameraManager>().GetComponent<Camera>() ;
+        ARCamera = FindObjectOfType<ARCameraManager>().GetComponent<Camera>();
         //ARCamera = GameObject.Find("AR Camera(Clone)").GetComponent<Camera>();
         //ARCamera = Camera.main
-        if ( ARCamera == null )
+        if (ARCamera == null)
         {
             Application.Quit(0);
         }
@@ -260,6 +225,6 @@ public class ARInteraction : MonoBehaviour
         objectiveWorldPosition.Add(new Vector3(1.6f, -1.9f, -0.1f));
         objectiveWorldRotation.Add(new Quaternion(0.0f, 0.6f, 0.0f, 0.8f));
 
-        
+
     }
 }

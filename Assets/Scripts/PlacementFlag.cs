@@ -1,8 +1,21 @@
 using UnityEngine;
+using Photon.Pun;
 
 public class PlacementFlag : MonoBehaviour
 {
     public string flagName = "Capture Point";
 
     public bool isPinged = false;
+
+    public void SetPose(Vector3 position, Quaternion rotation)
+    {
+        GetComponent<PhotonView>().RPC("SetPoseRPC", RpcTarget.All, position, rotation);
+    }
+
+    void SetPoseRPC(Vector3 position, Quaternion rotation)
+    {
+        transform.parent = GameObject.Find("ScenarioObjects").transform;
+        transform.localPosition = position;
+        transform.localRotation = rotation;
+    }
 }

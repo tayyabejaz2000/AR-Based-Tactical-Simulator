@@ -54,12 +54,6 @@ public class ARAnchorInteraction : MonoBehaviour
         }
     }
 
-    void OnFlagImageTracked(Transform parent)
-    {
-        var flagObject = Instantiate(flagPrefab, parent);
-        //Make Flag Object stand upright
-        flagObject.transform.rotation = Quaternion.Euler(0, parent.eulerAngles.y, 0);
-    }
 
     /// <summary>
     /// Callback binded to <see cref="ARTrackedImageManager.trackedImagesChanged"/>
@@ -74,16 +68,7 @@ public class ARAnchorInteraction : MonoBehaviour
             switch (image.referenceImage.name)
             {
                 case "Marker-1":
-                    Debug.Log("Case: Marker 1");
-                    //In Case of `Marker-1` tracked, instantiate a Flag Prefab
-                    OnFlagImageTracked(image.transform);
                     break;
-
-                    //case "Start-Marker":
-                    //Debug.Log("Case: Start-Marker 1");
-                    //In-case of Start-Marker, store it's position and rotation in real world
-                    //OnStartImageTracked(image.gameObject);
-                    //break;
             }
         }
     }
