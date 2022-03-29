@@ -15,6 +15,7 @@ public class ARInteraction : MonoBehaviour
 
     public string UISpritePrefabPath1 = "Prefabs/Alert-1";
     public string UISpritePrefabPath2 = "Prefabs/Alert-2";
+    public string flagObjectPath = "Prefabs/Flag_Prefab";
     private ARRaycastManager _arRaycastManager;
     private Vector2 crosshairPosition;
 
@@ -185,7 +186,7 @@ public class ARInteraction : MonoBehaviour
         //Add the objectives to scenario
         for (int i = 0; i < objectiveWorldPosition.Count; i++)
         {
-            var flag = PhotonNetwork.Instantiate("", Vector3.zero, Quaternion.identity);
+            var flag = PhotonNetwork.Instantiate(flagObjectPath, Vector3.zero, Quaternion.identity);
             flag.GetComponent<PlacementFlag>().SetPose(objectiveWorldPosition[i], objectiveWorldRotation[i]);
         }
     }
