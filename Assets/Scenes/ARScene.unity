@@ -1675,6 +1675,7 @@ MonoBehaviour:
   gameObjectToInstantiate: {fileID: 5011692246564093953, guid: 914d751e46ea6df4dbd7d302844ea2e8, type: 3}
   alertToInstantiate1: {fileID: 2361601238792951023, guid: dcb0cfc66f6775846a9f03ad30875bd2, type: 3}
   alertToInstantiate2: {fileID: 2361601238792951023, guid: 4c60d929edfbf17489c0d8731a74750d, type: 3}
+  flagToInstantiate: {fileID: 0}
   spritesAnchor: {fileID: 1893545981}
   UISpritePrefab1: {fileID: 1006565293051239624, guid: 33a908ddfd04dc2479722c9699acf031, type: 3}
   UISpritePrefab2: {fileID: 5307301340947369023, guid: f8e597550dd36d740ba5fa58329b0ec9, type: 3}

@@ -105,15 +105,14 @@ public class ARInteraction : MonoBehaviour
                 //If the ray hit a physics object i.e. 3D Ping, update the spawn world position
                 worldPosition = hitObject.position;
 
-                //Instantiate a 2D alert
-                alertObject = Instantiate(UISpritePrefab1, Vector3.zero, Quaternion.identity, spritesAnchor.transform);
-
                 // If the hitObject was a Capture Flag, set the text for 2D alert as <c>placementFlag.flagName</c>
                 // and mark the flag as pinged
-                if (hitObject.TryGetComponent<PlacementFlag>(out var placementFlag))
+                if (hitObject.TryGetComponent<PlacementFlag>(out var placementFlag) && placementFlag.isPinged == false)
                 {
                     alertText = placementFlag.flagName;
                     placementFlag.isPinged = true;
+                    //Instantiate a 2D alert
+                    alertObject = Instantiate(UISpritePrefab1, Vector3.zero, Quaternion.identity, spritesAnchor.transform);
                 }
             }
             else
@@ -218,7 +217,11 @@ public class ARInteraction : MonoBehaviour
         //Add the objectives to scenario
         for (int i = 0; i < objectiveWorldPosition.Count; i++)
         {
-            Instantiate(flagToInstantiate, objectiveWorldPosition[i] * 2, objectiveWorldRotation[i], GameObject.Find("ScenarioObjects").transform);
+            var temp = Instantiate(flagToInstantiate);
+            var temp_parent = GameObject.Find("ScenarioObjects");
+            temp.transform.parent = temp_parent.transform;
+            temp.transform.localPosition = objectiveWorldPosition[i];
+            temp.transform.localRotation = objectiveWorldRotation[i];
         }
     }
     void Awake()
