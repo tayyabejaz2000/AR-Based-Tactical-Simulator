@@ -12,6 +12,7 @@ public class PlacementFlag : MonoBehaviour
         GetComponent<PhotonView>().RPC("SetPoseRPC", RpcTarget.All, position, rotation);
     }
 
+    [PunRPC]
     void SetPoseRPC(Vector3 position, Quaternion rotation)
     {
         transform.parent = GameObject.Find("ScenarioObjects").transform;

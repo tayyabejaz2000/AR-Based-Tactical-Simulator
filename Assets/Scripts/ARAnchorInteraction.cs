@@ -4,12 +4,10 @@ using UnityEngine.XR.ARFoundation;
 
 public class ARAnchorInteraction : MonoBehaviour
 {
-    public GameObject ARSessionOrigin;
     public ARTrackedImageManager imageManager;
-    public GameObject flagPrefab;
-    public Vector3 startingPosition;
-    public Quaternion startingRotation;
-    public bool isStartingMarkerScanned;
+    Vector3 startingPosition;
+    Quaternion startingRotation;
+    bool isStartingMarkerScanned;
 
     //Log Printer
     uint qsize = 10;  // number of messages to keep

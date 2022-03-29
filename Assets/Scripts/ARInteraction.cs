@@ -107,7 +107,7 @@ public class ARInteraction : MonoBehaviour
         var ray = ARCamera.ScreenPointToRay(crosshairPosition);
         var mask = 1 << 6;
         if (Physics.Raycast(ray, out var hitObject, float.MaxValue, mask))
-            Destroy(hitObject.collider.gameObject);
+            PhotonNetwork.Destroy(hitObject.collider.GetComponent<PhotonView>());
     }
 
     public void SyncScenarioObjects()

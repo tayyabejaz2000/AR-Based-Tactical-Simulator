@@ -14,6 +14,8 @@ public class PlacementAlert : MonoBehaviour
     [SerializeField]
     TextMeshProUGUI nameText;
 
+    PhotonView photonView;
+
     float _distanceFromCamera;
     float distance
     {
@@ -53,6 +55,7 @@ public class PlacementAlert : MonoBehaviour
 
     void Start()
     {
+        photonView = GetComponent<PhotonView>();
         ARCamera = Camera.main;
 
         distance = (worldPosition - ARCamera.transform.position).sqrMagnitude;
@@ -62,11 +65,15 @@ public class PlacementAlert : MonoBehaviour
     {
         distance = (worldPosition - ARCamera.transform.position).sqrMagnitude;
         transform.position = ARCamera.WorldToScreenPoint(worldPosition);
-        ttl -= Time.deltaTime;
-        if (ttl <= 0.0f)
-            Destroy(gameObject);
+        if (photonView.IsMine)
+        {
+            ttl -= Time.deltaTime;
+            if (ttl <= 0.0f)
+                PhotonNetwork.Destroy(photonView);
+        }
     }
 
+    [PunRPC]
     void SetDataRPC(string text, Vector3 worldPos)
     {
         worldPosition = worldPos;
