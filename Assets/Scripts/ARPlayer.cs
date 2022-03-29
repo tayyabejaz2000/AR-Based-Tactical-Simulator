@@ -43,7 +43,7 @@ public class ARPlayer : MonoBehaviour
             gameObject.GetComponent<ARPoseDriver>().enabled = true;
             gameObject.GetComponent<ARCameraManager>().enabled = true;
             gameObject.GetComponent<ARCameraBackground>().enabled = true;
-            gameObject.GetComponent<AROcclusionManager>().enabled = true;
+            //gameObject.GetComponent<AROcclusionManager>().enabled = true;
 
             GameObject.Find("ARCore Extensions").GetComponent<ARCoreExtensions>().CameraManager = GetComponent<ARCameraManager>();
             GetComponentInParent<ARSessionOrigin>().camera = GetComponent<Camera>();

@@ -16,6 +16,9 @@ public class ARInteraction : MonoBehaviour
     public string UISpritePrefabPath1 = "Prefabs/Alert-1";
     public string UISpritePrefabPath2 = "Prefabs/Alert-2";
     public string flagObjectPath = "Prefabs/Flag_Prefab";
+    public Score score;
+    private Material flagPinged;
+    private Texture flagPingedTexture;
     private ARRaycastManager _arRaycastManager;
     private Vector2 crosshairPosition;
 
@@ -84,6 +87,24 @@ public class ARInteraction : MonoBehaviour
                     placementFlag.isPinged = true;
                     //Instantiate a 2D alert
                     alertObject = PhotonNetwork.Instantiate(UISpritePrefabPath1, Vector3.zero, Quaternion.identity);
+                    //Updating the score
+                    score.UpdateScore();
+                    if (placementFlag.GetComponentInChildren<MeshRenderer>() )
+                    {
+                        Debug.Log("Grabbed the component successfully");
+                    }
+                    else
+                    {
+                        Debug.Log("Failed to grab the component");
+                    }
+                    //placementFlag.GetComponentInChildren<MeshRenderer>().material = flagPinged;
+                    //placementFlag.GetComponent<MeshRenderer>().material = flagPinged;
+                    placementFlag.GetComponentInChildren<MeshRenderer>().material.SetTexture("_MainTex", flagPingedTexture);
+                    //placementFlag.M
+                }
+                else
+                {
+                    alertObject = PhotonNetwork.Instantiate(UISpritePrefabPath2, Vector3.zero, Quaternion.identity);
                 }
             }
             else
@@ -197,6 +218,7 @@ public class ARInteraction : MonoBehaviour
     void Start()
     {
         ARCamera = FindObjectOfType<ARCameraManager>().GetComponent<Camera>();
+        //score = FindObjectOfType<Score>().GetComponent<Score - Value>;
         //ARCamera = GameObject.Find("AR Camera(Clone)").GetComponent<Camera>();
         //ARCamera = Camera.main
         if (ARCamera == null)
@@ -226,6 +248,17 @@ public class ARInteraction : MonoBehaviour
         objectiveWorldPosition.Add(new Vector3(1.6f, -1.9f, -0.1f));
         objectiveWorldRotation.Add(new Quaternion(0.0f, 0.6f, 0.0f, 0.8f));
 
+        flagPinged = Resources.Load<Material>("Materials/FlagModels/Flag_owned");
+        flagPingedTexture = Resources.Load<Texture>("Models/FlagModels/flag_lowpoly_Material.001_BaseColor_Black");
 
+        /*if ( flagPingedTexture == false )
+        {
+            Application.Quit(0);
+        }
+        else
+        {
+            Debug.Log("Texture Loaded successfully");
+            score.UpdateScore();
+        }*/
     }
 }
