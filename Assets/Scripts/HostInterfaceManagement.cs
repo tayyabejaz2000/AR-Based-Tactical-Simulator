@@ -28,6 +28,13 @@ public class HostInterfaceManagement : MonoBehaviour
 
     void Start()
     {
+        if (!Photon.Pun.PhotonNetwork.IsMasterClient)
+        {
+            GameObject.Find("HostButtons").SetActive(false);
+            enabled = false;
+        }
+
+
         buttonBomb.SetActive(false);
         buttonFlag.SetActive(false);
         buttonDestroy.SetActive(false);
@@ -50,15 +57,15 @@ public class HostInterfaceManagement : MonoBehaviour
         {
             case ButtonStateHost.AddBomb:
                 Debug.Log("Add Bomb Pushed");
-                //ARController.AddObject();
+                ARController.AddMine();
                 break;
             case ButtonStateHost.AddFlag:
                 Debug.Log("Add Flag Pushed");
-                //ARController.AddAlert();
+                ARController.AddTargetFlag();
                 break;
             case ButtonStateHost.RemoveObjective:
                 Debug.Log("Remove Object Pushed");
-                //ARController.RemoveObject();
+                ARController.RemoveHostObjects();
                 break;
         }
 

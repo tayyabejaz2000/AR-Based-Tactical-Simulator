@@ -1,18 +1,27 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
+using Photon.Pun;
 
 public class Score : MonoBehaviour
 {
-    public TextMeshProUGUI text;
+    TextMeshProUGUI text;
+
+    void Start()
+    {
+        text = GetComponent<TextMeshProUGUI>();
+    }
     public void UpdateScore()
     {
-        string currentScore = text.text;
-        int score = int.Parse(currentScore);
-        //Debug.Log(currentScore);
-        score++;
-        text.text = score.ToString();
+        string currentScore = text.text.Split(':')[1].Trim();
+        int score = int.Parse(currentScore) + 1;
+        text.text = "Score: " + score.ToString();
+
+        GetComponent<PhotonView>().RPC("SyncScoreRPC", RpcTarget.Others, text.text);
+    }
+
+    [PunRPC]
+    public void SyncScoreRPC(string score)
+    {
+        text.text = score;
     }
 }

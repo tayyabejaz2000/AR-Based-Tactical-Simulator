@@ -16,9 +16,8 @@ public class ARInteraction : MonoBehaviour
     public string UISpritePrefabPath1 = "Prefabs/Alert-1";
     public string UISpritePrefabPath2 = "Prefabs/Alert-2";
     public string flagObjectPath = "Prefabs/Flag_Prefab";
+    public string minePrefabPath = "Prefabs/Mine_Prefab";
     public Score score;
-    private Material flagPinged;
-    private Texture flagPingedTexture;
     private ARRaycastManager _arRaycastManager;
     private Vector2 crosshairPosition;
 
@@ -31,10 +30,6 @@ public class ARInteraction : MonoBehaviour
     List<Quaternion> markerPointRotation;
     Vector3 positionCentroid;
     Quaternion rotationCentroid;
-
-    //Sample Scenario List
-    List<Vector3> objectiveWorldPosition;
-    List<Quaternion> objectiveWorldRotation;
 
 
     /// <summary>
@@ -51,8 +46,11 @@ public class ARInteraction : MonoBehaviour
             Debug.Log("HitPose Position: " + hitPose.position);
             Debug.Log("HitPose Rotation: " + hitPose.rotation);
 
+            var position = GameObject.Find("ScenarioObjects").transform.InverseTransformPoint(hitPose.position);
+
             //Spawn a 3D Ping and on the hit pose in 3D
-            PhotonNetwork.Instantiate(objectPrefabPath, hitPose.position, hitPose.rotation);
+            var pingObject = PhotonNetwork.Instantiate(objectPrefabPath, position, hitPose.rotation);
+            pingObject.GetComponent<PlacementObject>().SetPose(position, hitPose.rotation);
         }
     }
 
@@ -67,8 +65,8 @@ public class ARInteraction : MonoBehaviour
             GameObject alertObject = null;
             var alertText = "";
 
-            //World Position where the alert will spawn
-            var worldPosition = hits[0].pose.position;
+            //Local Position where the alert will spawn
+            var localPosition = GameObject.Find("ScenarioObjects").transform.InverseTransformPoint(hits[0].pose.position);
 
             var ray = ARCamera.ScreenPointToRay(crosshairPosition);
             var mask = 1 << 7;
@@ -77,7 +75,7 @@ public class ARInteraction : MonoBehaviour
             {
                 var hitObject = hitInfo.transform;
                 //If the ray hit a physics object i.e. 3D Ping, update the spawn world position
-                worldPosition = hitObject.position;
+                localPosition = GameObject.Find("ScenarioObjects").transform.InverseTransformPoint(hitObject.position);
 
                 // If the hitObject was a Capture Flag, set the text for 2D alert as <c>placementFlag.flagName</c>
                 // and mark the flag as pinged
@@ -89,17 +87,9 @@ public class ARInteraction : MonoBehaviour
                     alertObject = PhotonNetwork.Instantiate(UISpritePrefabPath1, Vector3.zero, Quaternion.identity);
                     //Updating the score
                     score.UpdateScore();
-                    if (placementFlag.GetComponentInChildren<MeshRenderer>() )
-                    {
-                        Debug.Log("Grabbed the component successfully");
-                    }
-                    else
-                    {
-                        Debug.Log("Failed to grab the component");
-                    }
                     //placementFlag.GetComponentInChildren<MeshRenderer>().material = flagPinged;
                     //placementFlag.GetComponent<MeshRenderer>().material = flagPinged;
-                    placementFlag.GetComponentInChildren<MeshRenderer>().material.SetTexture("_MainTex", flagPingedTexture);
+                    placementFlag.SetScanned();
                     //placementFlag.M
                 }
                 else
@@ -116,7 +106,7 @@ public class ARInteraction : MonoBehaviour
             if (alertObject.TryGetComponent<PlacementAlert>(out var placementAlert))
             {
                 //Set the text for spawned alert and the 3D world position for the UI Sprite
-                placementAlert.SetData(alertText, worldPosition);
+                placementAlert.SetData(alertText, localPosition);
             }
         }
     }
@@ -131,6 +121,43 @@ public class ARInteraction : MonoBehaviour
             PhotonNetwork.Destroy(hitObject.collider.GetComponent<PhotonView>());
     }
 
+    public void RemoveHostObjects()
+    {
+        var ray = ARCamera.ScreenPointToRay(crosshairPosition);
+        if (Physics.Raycast(ray, out var hitObject, float.MaxValue))
+            PhotonNetwork.Destroy(hitObject.collider.GetComponent<PhotonView>());
+    }
+
+    public void AddTargetFlag()
+    {
+        if (_arRaycastManager.Raycast(crosshairPosition, hits, TrackableType.PlaneWithinPolygon) && hits.Count > 0)
+        {
+            //Get the first hit pose
+            var hitPose = hits[0].pose;
+
+            var position = GameObject.Find("ScenarioObjects").transform.InverseTransformPoint(hitPose.position);
+
+            //Spawn a 3D Ping and on the hit pose in 3D
+            var flagObject = PhotonNetwork.InstantiateRoomObject(flagObjectPath, position, hitPose.rotation);
+            flagObject.GetComponent<PlacementFlag>().SetPose(position, hitPose.rotation);
+        }
+    }
+
+    public void AddMine()
+    {
+        if (_arRaycastManager.Raycast(crosshairPosition, hits, TrackableType.PlaneWithinPolygon) && hits.Count > 0)
+        {
+            //Get the first hit pose
+            var hitPose = hits[0].pose;
+
+            var position = GameObject.Find("ScenarioObjects").transform.InverseTransformPoint(hitPose.position);
+
+            //Spawn a 3D Ping and on the hit pose in 3D
+            var mineObject = PhotonNetwork.InstantiateRoomObject(minePrefabPath, position, hitPose.rotation);
+            mineObject.GetComponent<PlacementMine>().SetPose(position, hitPose.rotation);
+        }
+    }
+
     public void SyncScenarioObjects()
     {
         if (_arRaycastManager.Raycast(crosshairPosition, hits, TrackableType.PlaneWithinPolygon) && hits.Count > 0)
@@ -139,9 +166,6 @@ public class ARInteraction : MonoBehaviour
             var scenarioObjects = GameObject.Find("ScenarioObjects");
             scenarioObjects.transform.position = hitPose.position;
             scenarioObjects.transform.eulerAngles = Vector3.Scale(hitPose.rotation.eulerAngles, Vector3.up);
-
-            Camera.main.transform.parent.position = hitPose.position;
-            Camera.main.transform.parent.eulerAngles = Vector3.Scale(hitPose.rotation.eulerAngles, Vector3.up);
         }
     }
 
@@ -202,15 +226,6 @@ public class ARInteraction : MonoBehaviour
         return Quaternion.Lerp(firstMidPoint, secondMidPoint, 0.5f);
     }
 
-    public void AddObjectiveToScenario()
-    {
-        //Add the objectives to scenario
-        for (int i = 0; i < objectiveWorldPosition.Count; i++)
-        {
-            var flag = PhotonNetwork.Instantiate(flagObjectPath, Vector3.zero, Quaternion.identity);
-            flag.GetComponent<PlacementFlag>().SetPose(objectiveWorldPosition[i], objectiveWorldRotation[i]);
-        }
-    }
     void Awake()
     {
         _arRaycastManager = GetComponent<ARRaycastManager>();
@@ -229,36 +244,5 @@ public class ARInteraction : MonoBehaviour
         crosshairPosition = new Vector2(Screen.width / 2f, Screen.height / 2f);
         markerPointPosition = new List<Vector3>();
         markerPointRotation = new List<Quaternion>();
-
-        objectiveWorldPosition = new List<Vector3>();
-        objectiveWorldRotation = new List<Quaternion>();
-        //Append sample scenario objective here
-        objectiveWorldPosition.Add(new Vector3(-0.1f, -2.0f, 0.6f));
-        objectiveWorldRotation.Add(new Quaternion(0.0f, -0.1f, 0.0f, 1.0f));
-
-        objectiveWorldPosition.Add(new Vector3(-0.4f, -2.0f, 0.4f));
-        objectiveWorldRotation.Add(new Quaternion(0.0f, -0.3f, 0.0f, 0.9f));
-
-        objectiveWorldPosition.Add(new Vector3(0.3f, -2.0f, 0.6f));
-        objectiveWorldRotation.Add(new Quaternion(0.0f, 0.1f, 0.0f, 1.0f));
-
-        objectiveWorldPosition.Add(new Vector3(-0.2f, -2.0f, 1.1f));
-        objectiveWorldRotation.Add(new Quaternion(0.0f, -0.1f, 0.0f, 1.0f));
-
-        objectiveWorldPosition.Add(new Vector3(1.6f, -1.9f, -0.1f));
-        objectiveWorldRotation.Add(new Quaternion(0.0f, 0.6f, 0.0f, 0.8f));
-
-        flagPinged = Resources.Load<Material>("Materials/FlagModels/Flag_owned");
-        flagPingedTexture = Resources.Load<Texture>("Models/FlagModels/flag_lowpoly_Material.001_BaseColor_Black");
-
-        /*if ( flagPingedTexture == false )
-        {
-            Application.Quit(0);
-        }
-        else
-        {
-            Debug.Log("Texture Loaded successfully");
-            score.UpdateScore();
-        }*/
     }
 }

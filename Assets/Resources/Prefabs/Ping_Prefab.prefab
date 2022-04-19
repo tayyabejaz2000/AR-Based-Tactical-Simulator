@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8329853003038087498}
   - component: {fileID: 2337684418749975243}
+  - component: {fileID: 1568502437179313038}
   - component: {fileID: 8254741007973398655}
   m_Layer: 6
   m_Name: Ping_Prefab
@@ -55,6 +56,18 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &1568502437179313038
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5011692246564093953}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33d7893b7de4d1643a5b8f03cee183e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!65 &8254741007973398655
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -106,7 +106,6 @@ public class InterfaceManagement : MonoBehaviour
         Debug.Log("Syncing Origin");
         originButton.SetActive(false);
         ARController.SyncScenarioObjects();
-        ARController.AddObjectiveToScenario();
         Debug.Log("Added Objectives");
     }
 

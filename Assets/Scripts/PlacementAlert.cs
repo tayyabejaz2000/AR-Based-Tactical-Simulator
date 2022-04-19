@@ -40,12 +40,13 @@ public class PlacementAlert : MonoBehaviour
     }
 
     Camera ARCamera;
-    Vector3 worldPosition;
+    Vector3 localPosition;
+    GameObject scenarioParent;
 
 
-    public void SetData(string alertText, Vector3 worldPosition)
+    public void SetData(string alertText, Vector3 position)
     {
-        GetComponent<PhotonView>().RPC("SetDataRPC", RpcTarget.All, alertText, worldPosition);
+        GetComponent<PhotonView>().RPC("SetDataRPC", RpcTarget.All, alertText, position);
     }
 
     void Awake()
@@ -58,13 +59,15 @@ public class PlacementAlert : MonoBehaviour
         photonView = GetComponent<PhotonView>();
         ARCamera = Camera.main;
 
-        distance = (worldPosition - ARCamera.transform.position).sqrMagnitude;
+        scenarioParent = GameObject.Find("ScenarioObjects");
+
+        distance = (scenarioParent.transform.TransformPoint(localPosition) - ARCamera.transform.position).sqrMagnitude;
     }
 
     void LateUpdate()
     {
-        distance = (worldPosition - ARCamera.transform.position).sqrMagnitude;
-        transform.position = ARCamera.WorldToScreenPoint(worldPosition);
+        distance = (scenarioParent.transform.TransformPoint(localPosition) - ARCamera.transform.position).sqrMagnitude;
+        transform.position = ARCamera.WorldToScreenPoint(scenarioParent.transform.TransformPoint(localPosition));
         if (photonView.IsMine)
         {
             ttl -= Time.deltaTime;
@@ -74,9 +77,9 @@ public class PlacementAlert : MonoBehaviour
     }
 
     [PunRPC]
-    void SetDataRPC(string text, Vector3 worldPos)
+    void SetDataRPC(string text, Vector3 localPos)
     {
-        worldPosition = worldPos;
+        localPosition = localPos;
         alertText = text;
     }
 }

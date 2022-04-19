@@ -5,11 +5,17 @@ using Google.XR.ARCoreExtensions;
 
 public class ARPlayer : MonoBehaviour
 {
+    public string playerMarkerPrefabPath = "Prefabs/PlayerMarker";
     PhotonView photonView;
+
+    public Vector3 localPosition;
+
     public Component[] localComponents;
     public Component[] otherComponents;
 
     private bool _isSet;
+
+    GameObject playerMarker;
     public bool isMine
     {
         set
@@ -47,6 +53,14 @@ public class ARPlayer : MonoBehaviour
 
             GameObject.Find("ARCore Extensions").GetComponent<ARCoreExtensions>().CameraManager = GetComponent<ARCameraManager>();
             GetComponentInParent<ARSessionOrigin>().camera = GetComponent<Camera>();
+
+            playerMarker = PhotonNetwork.Instantiate(playerMarkerPrefabPath, Vector3.zero, Quaternion.identity);
         }
+    }
+
+    void LateUpdate()
+    {
+        localPosition = GameObject.Find("ScenarioObjects").transform.InverseTransformPoint(transform.position);
+        playerMarker.GetComponent<ARPlayerMarker>().SetPosition(localPosition);
     }
 }
