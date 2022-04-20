@@ -63,4 +63,14 @@ public class ARPlayer : MonoBehaviour
         localPosition = GameObject.Find("ScenarioObjects").transform.InverseTransformPoint(transform.position);
         playerMarker.GetComponent<ARPlayerMarker>().SetPosition(localPosition);
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if ( collision.gameObject.tag == "Mine" )
+        {
+            FindObjectOfType<Health>().UpdateHealth();
+            PhotonNetwork.Destroy(collision.gameObject.GetComponent<PhotonView>());
+            //Destroy(collision.gameObject);
+        }
+    }
 }
