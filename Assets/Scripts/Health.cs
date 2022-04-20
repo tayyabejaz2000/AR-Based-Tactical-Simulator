@@ -12,8 +12,8 @@ public class Health : MonoBehaviour
 
     public void UpdateHealth()
     {
-        string currentScore = text.text.Split(':')[1].Trim();
-        int health = int.Parse(currentScore) - 1;
+        string currentHealth = text.text.Split(':')[1].Trim();
+        int health = int.Parse(currentHealth) - 1;
         text.text = "Health: " + health.ToString();
 
         GetComponent<PhotonView>().RPC("SyncHealthRPC", RpcTarget.Others, text.text);
