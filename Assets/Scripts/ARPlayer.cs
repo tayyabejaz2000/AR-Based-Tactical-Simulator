@@ -39,22 +39,25 @@ public class ARPlayer : MonoBehaviour
 
     void Start()
     {
-        transform.parent = GameObject.Find("AR Session Origin").transform;
         photonView = GetComponent<PhotonView>();
         isMine = photonView.IsMine;
 
         if (photonView.IsMine)
         {
+            transform.parent = GameObject.Find("AR Session Origin").transform;
             gameObject.GetComponent<Camera>().enabled = true;
             gameObject.GetComponent<ARPoseDriver>().enabled = true;
             gameObject.GetComponent<ARCameraManager>().enabled = true;
             gameObject.GetComponent<ARCameraBackground>().enabled = true;
-            //gameObject.GetComponent<AROcclusionManager>().enabled = true;
 
             GameObject.Find("ARCore Extensions").GetComponent<ARCoreExtensions>().CameraManager = GetComponent<ARCameraManager>();
             GetComponentInParent<ARSessionOrigin>().camera = GetComponent<Camera>();
 
             playerMarker = PhotonNetwork.Instantiate(playerMarkerPrefabPath, Vector3.zero, Quaternion.identity);
+        }
+        else
+        {
+            transform.parent = GameObject.Find("ScenarioObjects").transform;
         }
     }
 
@@ -63,14 +66,12 @@ public class ARPlayer : MonoBehaviour
         localPosition = GameObject.Find("ScenarioObjects").transform.InverseTransformPoint(transform.position);
         playerMarker.GetComponent<ARPlayerMarker>().SetPosition(localPosition);
     }
-
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if ( collision.gameObject.tag == "Mine" )
+        if (photonView.IsMine && other.gameObject.tag == "Mine")
         {
             FindObjectOfType<Health>().UpdateHealth();
-            PhotonNetwork.Destroy(collision.gameObject.GetComponent<PhotonView>());
-            //Destroy(collision.gameObject);
+            PhotonNetwork.Destroy(other.GetComponentInParent<PhotonView>());
         }
     }
 }

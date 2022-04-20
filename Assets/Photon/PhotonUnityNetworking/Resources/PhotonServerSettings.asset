@@ -29,7 +29,7 @@ MonoBehaviour:
     EnableLobbyStatistics: 0
     NetworkLogging: 2
   DevRegion: in
-  PunLogging: 2
+  PunLogging: 0
   EnableSupportLogger: 0
   RunInBackground: 1
   StartInOfflineMode: 0
@@ -41,6 +41,7 @@ MonoBehaviour:
   - SetScannedRPC
   - SyncScoreRPC
   - SetPositionRPC
+  - SyncHealthRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

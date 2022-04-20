@@ -32,7 +32,7 @@ public class MainMenu : MonoBehaviourPunCallbacks
     /// <summary>
     /// Returns number of players currently present in the room
     /// </summary>
-    public uint GetPlayersCount() { return playerInRoom;  }
+    public uint GetPlayersCount() { return playerInRoom; }
     /// <summary>
     /// Connect To Photon Servers using Available PhotonNetwork Settings
     /// </summary>
@@ -141,6 +141,8 @@ public class MainMenu : MonoBehaviourPunCallbacks
 
     void Start()
     {
+        Input.compass.enabled = true;
+        Input.location.Start();
         //Set `Join Button` to be disabled until connected to Photon Servers
         button.interactable = false;
 

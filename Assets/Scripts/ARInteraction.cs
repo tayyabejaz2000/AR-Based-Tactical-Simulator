@@ -69,9 +69,8 @@ public class ARInteraction : MonoBehaviour
             var localPosition = GameObject.Find("ScenarioObjects").transform.InverseTransformPoint(hits[0].pose.position);
 
             var ray = ARCamera.ScreenPointToRay(crosshairPosition);
-            var mask = 1 << 7;
             //Check Hit condition here
-            if (Physics.Raycast(ray, out var hitInfo, float.MaxValue, mask))
+            if (Physics.Raycast(ray, out var hitInfo, float.MaxValue))
             {
                 var hitObject = hitInfo.transform;
                 //If the ray hit a physics object i.e. 3D Ping, update the spawn world position
@@ -79,7 +78,7 @@ public class ARInteraction : MonoBehaviour
 
                 // If the hitObject was a Capture Flag, set the text for 2D alert as <c>placementFlag.flagName</c>
                 // and mark the flag as pinged
-                if (hitObject.TryGetComponent<PlacementFlag>(out var placementFlag) && placementFlag.isPinged == false)
+                if (hitObject.parent.TryGetComponent<PlacementFlag>(out var placementFlag) && placementFlag.isPinged == false)
                 {
                     alertText = placementFlag.flagName;
                     placementFlag.isPinged = true;
@@ -90,7 +89,6 @@ public class ARInteraction : MonoBehaviour
                     //placementFlag.GetComponentInChildren<MeshRenderer>().material = flagPinged;
                     //placementFlag.GetComponent<MeshRenderer>().material = flagPinged;
                     placementFlag.SetScanned();
-                    //placementFlag.M
                 }
                 else
                 {
@@ -118,14 +116,16 @@ public class ARInteraction : MonoBehaviour
         var ray = ARCamera.ScreenPointToRay(crosshairPosition);
         var mask = 1 << 6;
         if (Physics.Raycast(ray, out var hitObject, float.MaxValue, mask))
-            PhotonNetwork.Destroy(hitObject.collider.GetComponent<PhotonView>());
+            if (hitObject.collider.TryGetComponent<PhotonView>(out var photonView))
+                PhotonNetwork.Destroy(photonView);
     }
 
     public void RemoveHostObjects()
     {
         var ray = ARCamera.ScreenPointToRay(crosshairPosition);
         if (Physics.Raycast(ray, out var hitObject, float.MaxValue))
-            PhotonNetwork.Destroy(hitObject.collider.GetComponent<PhotonView>());
+            if (hitObject.collider.TryGetComponent<PhotonView>(out var photonView))
+                PhotonNetwork.Destroy(photonView);
     }
 
     public void AddTargetFlag()
@@ -138,7 +138,7 @@ public class ARInteraction : MonoBehaviour
             var position = GameObject.Find("ScenarioObjects").transform.InverseTransformPoint(hitPose.position);
 
             //Spawn a 3D Ping and on the hit pose in 3D
-            var flagObject = PhotonNetwork.InstantiateRoomObject(flagObjectPath, position, hitPose.rotation);
+            var flagObject = PhotonNetwork.Instantiate(flagObjectPath, position, hitPose.rotation);
             flagObject.GetComponent<PlacementFlag>().SetPose(position, hitPose.rotation);
         }
     }
@@ -153,7 +153,7 @@ public class ARInteraction : MonoBehaviour
             var position = GameObject.Find("ScenarioObjects").transform.InverseTransformPoint(hitPose.position);
 
             //Spawn a 3D Ping and on the hit pose in 3D
-            var mineObject = PhotonNetwork.InstantiateRoomObject(minePrefabPath, position, hitPose.rotation);
+            var mineObject = PhotonNetwork.Instantiate(minePrefabPath, position, hitPose.rotation);
             mineObject.GetComponent<PlacementMine>().SetPose(position, hitPose.rotation);
         }
     }
@@ -165,7 +165,7 @@ public class ARInteraction : MonoBehaviour
             var hitPose = hits[0].pose;
             var scenarioObjects = GameObject.Find("ScenarioObjects");
             scenarioObjects.transform.position = hitPose.position;
-            scenarioObjects.transform.eulerAngles = Vector3.Scale(hitPose.rotation.eulerAngles, Vector3.up);
+            scenarioObjects.transform.eulerAngles = Vector3.up * (-Input.compass.trueHeading);
         }
     }
 

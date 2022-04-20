@@ -11,10 +11,11 @@ GameObject:
   - component: {fileID: 6732982784836870593}
   - component: {fileID: 6732982784836870577}
   - component: {fileID: 6732982784836870583}
-  - component: {fileID: 4532391482308515586}
+  - component: {fileID: 3302553887289119582}
+  - component: {fileID: 8594196375644902938}
   m_Layer: 0
   m_Name: LandMine
-  m_TagString: Untagged
+  m_TagString: Mine
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -28,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 6732982784836870621}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.005, y: 0.005, z: 0.005}
+  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_Children: []
   m_Father: {fileID: 9065574245099220717}
   m_RootOrder: 0
@@ -82,19 +83,36 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &4532391482308515586
-BoxCollider:
+--- !u!54 &3302553887289119582
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6732982784836870621}
+  serializedVersion: 2
+  m_Mass: 0.0000001
+  m_Drag: 0
+  m_AngularDrag: 0
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 0
+--- !u!136 &8594196375644902938
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6732982784836870621}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 14.034602, y: 4.262014, z: 13.025111}
-  m_Center: {x: -0.04903823, y: 1.7810069, z: -0.04658401}
+  m_Radius: 15.179864
+  m_Height: 39.734955
+  m_Direction: 1
+  m_Center: {x: 0, y: 18.274164, z: 0}
 --- !u!1 &9065574245099220718
 GameObject:
   m_ObjectHideFlags: 0
@@ -106,7 +124,7 @@ GameObject:
   - component: {fileID: 9065574245099220717}
   - component: {fileID: 4255388808036438304}
   - component: {fileID: 253456194626952415}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Mine_Temp
   m_TagString: Mine
   m_Icon: {fileID: 0}

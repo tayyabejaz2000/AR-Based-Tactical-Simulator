@@ -4,7 +4,7 @@ public class ARPlayerMarker : MonoBehaviour
 {
     public void SetPosition(Vector3 position)
     {
-        GetComponent<PhotonView>().RPC("SetPositionRPC", RpcTarget.All, position);
+        GetComponent<PhotonView>().RPC("SetPositionRPC", RpcTarget.Others, position);
     }
 
 
