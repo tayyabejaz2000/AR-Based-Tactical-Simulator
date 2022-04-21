@@ -7,6 +7,7 @@ using Photon.Pun;
 public class PlacementAlert : MonoBehaviour
 {
     public float ttl = 5.0f;
+    public bool isSelfDestruct = true;
 
     [SerializeField]
     TextMeshProUGUI targetText;
@@ -44,9 +45,16 @@ public class PlacementAlert : MonoBehaviour
     GameObject scenarioParent;
 
 
-    public void SetData(string alertText, Vector3 position)
+    public void SetData(string alertText, Vector3 position, bool deleteOnTimeout)
     {
         GetComponent<PhotonView>().RPC("SetDataRPC", RpcTarget.All, alertText, position);
+    }
+    [PunRPC]
+    void SetDataRPC(string text, Vector3 localPos, bool deleteOnTimeout)
+    {
+        localPosition = localPos;
+        alertText = text;
+        isSelfDestruct = deleteOnTimeout;
     }
 
     void Awake()
@@ -68,7 +76,7 @@ public class PlacementAlert : MonoBehaviour
     {
         distance = (scenarioParent.transform.TransformPoint(localPosition) - ARCamera.transform.position).sqrMagnitude;
         transform.position = ARCamera.WorldToScreenPoint(scenarioParent.transform.TransformPoint(localPosition));
-        if (photonView.IsMine)
+        if (isSelfDestruct && photonView.IsMine)
         {
             ttl -= Time.deltaTime;
             if (ttl <= 0.0f)
@@ -76,10 +84,5 @@ public class PlacementAlert : MonoBehaviour
         }
     }
 
-    [PunRPC]
-    void SetDataRPC(string text, Vector3 localPos)
-    {
-        localPosition = localPos;
-        alertText = text;
-    }
+
 }

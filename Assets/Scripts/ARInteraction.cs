@@ -61,6 +61,7 @@ public class ARInteraction : MonoBehaviour
     {
         GameObject alertObject = null;
         var alertText = "";
+        bool deleteOnTimeout = false;
 
         Vector3 localPosition = Vector3.zero;
 
@@ -92,12 +93,13 @@ public class ARInteraction : MonoBehaviour
         {
             localPosition = GameObject.Find("ScenarioObjects").transform.InverseTransformPoint(hits[0].pose.position);
             alertObject = PhotonNetwork.Instantiate(UISpritePrefabPath2, Vector3.zero, Quaternion.identity);
+            deleteOnTimeout = true;
         }
 
         if (alertObject != null && alertObject.TryGetComponent<PlacementAlert>(out var placementAlert))
         {
             //Set the text for spawned alert and the 3D world position for the UI Sprite
-            placementAlert.SetData(alertText, localPosition);
+            placementAlert.SetData(alertText, localPosition, deleteOnTimeout);
         }
     }
     /// <summary>

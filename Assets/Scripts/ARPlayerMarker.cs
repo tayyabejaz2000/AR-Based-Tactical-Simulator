@@ -34,10 +34,8 @@ public class ARPlayerMarker : MonoBehaviour
     {
         transform.position = ARCamera.WorldToScreenPoint(scenarioParent.TransformPoint(localPosition));
 
-        Debug.Log("Player marker position: " + transform.position + "; localPosition: " + scenarioParent.TransformPoint(localPosition));
-
         var player = Camera.main.gameObject;
-        var distance = (transform.position - player.transform.position).magnitude;
+        var distance = (transform.position - player.transform.position).sqrMagnitude;
         GetComponentInChildren<TMPro.TextMeshProUGUI>().text = distance.ToString("0.0") + "m";
     }
 }

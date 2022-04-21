@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using Photon.Pun;
 using UnityEngine.XR.ARFoundation;
 using Google.XR.ARCoreExtensions;
@@ -54,6 +55,9 @@ public class ARPlayer : MonoBehaviour
             GetComponentInParent<ARSessionOrigin>().camera = GetComponent<Camera>();
 
             playerMarker = PhotonNetwork.Instantiate(playerMarkerPrefabPath, Vector3.zero, Quaternion.identity);
+
+            playerMarker.GetComponent<Image>().enabled = false;
+            playerMarker.GetComponentInChildren<TMPro.TextMeshProUGUI>().enabled = false;
         }
         else
         {
