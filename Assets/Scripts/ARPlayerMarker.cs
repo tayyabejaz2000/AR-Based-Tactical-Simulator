@@ -16,16 +16,25 @@ public class ARPlayerMarker : MonoBehaviour
         localPosition = position;
     }
 
+    void Awake()
+    {
+        transform.parent = GameObject.Find("Sprites").transform;
+    }
+
     void Start()
     {
         scenarioParent = GameObject.Find("ScenarioObjects").transform;
-        transform.parent = scenarioParent;
+        //transform.parent = scenarioParent;
         ARCamera = Camera.main;
+
+        //PhotonNetwork.Instantiate("Prefabs/PlayerMarker", localPosition, Quaternion.identity);
     }
 
     void LateUpdate()
     {
-        transform.position = ARCamera.WorldToScreenPoint(scenarioParent.transform.TransformPoint(localPosition));
+        transform.position = ARCamera.WorldToScreenPoint(scenarioParent.TransformPoint(localPosition));
+
+        Debug.Log("Player marker position: " + transform.position + "; localPosition: " + scenarioParent.TransformPoint(localPosition));
 
         var player = Camera.main.gameObject;
         var distance = (transform.position - player.transform.position).magnitude;

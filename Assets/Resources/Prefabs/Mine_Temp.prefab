@@ -150,6 +150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a085bc12ec28e446b75dee99e4cec5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPinged: 0
 --- !u!136 &3758474786883071560
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -158,7 +159,7 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9065574245099220718}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   m_Radius: 0.07932022
   m_Height: 0.2196719
