@@ -2,6 +2,7 @@ using UnityEngine;
 using Photon.Pun;
 public class PlacementMine : MonoBehaviour
 {
+    public bool isPinged = false;
     public void SetPose(Vector3 position, Quaternion rotation)
     {
         GetComponent<PhotonView>().RPC("SetPoseRPC", RpcTarget.All, position, rotation);

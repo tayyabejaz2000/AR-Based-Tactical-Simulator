@@ -6,7 +6,6 @@ using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
-
 [RequireComponent(typeof(ARRaycastManager))]
 public class ARInteraction : MonoBehaviour
 {
@@ -60,52 +59,45 @@ public class ARInteraction : MonoBehaviour
     /// </summary>
     public void AddAlert()
     {
-        if (_arRaycastManager.Raycast(crosshairPosition, hits, TrackableType.PlaneWithinPolygon) && hits.Count > 0)
+        GameObject alertObject = null;
+        var alertText = "";
+
+        Vector3 localPosition = Vector3.zero;
+
+        var ray = ARCamera.ScreenPointToRay(crosshairPosition);
+        int mask = 1 << 7;
+        if (Physics.Raycast(ray, out var hitInfo, float.MaxValue, mask))
         {
-            GameObject alertObject = null;
-            var alertText = "";
-
-            //Local Position where the alert will spawn
-            var localPosition = GameObject.Find("ScenarioObjects").transform.InverseTransformPoint(hits[0].pose.position);
-
-            var ray = ARCamera.ScreenPointToRay(crosshairPosition);
-            //Check Hit condition here
-            if (Physics.Raycast(ray, out var hitInfo, float.MaxValue))
+            var hitObject = hitInfo.transform;
+            localPosition = GameObject.Find("ScenarioObjects").transform.InverseTransformPoint(hitObject.position);
+            if (hitObject.TryGetComponent<PlacementFlag>(out var placementFlag) && placementFlag.isPinged == false)
             {
-                var hitObject = hitInfo.transform;
-                //If the ray hit a physics object i.e. 3D Ping, update the spawn world position
-                localPosition = GameObject.Find("ScenarioObjects").transform.InverseTransformPoint(hitObject.position);
-
-                // If the hitObject was a Capture Flag, set the text for 2D alert as <c>placementFlag.flagName</c>
-                // and mark the flag as pinged
-                if (hitObject.parent.TryGetComponent<PlacementFlag>(out var placementFlag) && placementFlag.isPinged == false)
-                {
-                    alertText = placementFlag.flagName;
-                    placementFlag.isPinged = true;
-                    //Instantiate a 2D alert
-                    alertObject = PhotonNetwork.Instantiate(UISpritePrefabPath1, Vector3.zero, Quaternion.identity);
-                    //Updating the score
-                    score.UpdateScore();
-                    //placementFlag.GetComponentInChildren<MeshRenderer>().material = flagPinged;
-                    //placementFlag.GetComponent<MeshRenderer>().material = flagPinged;
-                    placementFlag.SetScanned();
-                }
-                else
-                {
-                    alertObject = PhotonNetwork.Instantiate(UISpritePrefabPath2, Vector3.zero, Quaternion.identity);
-                }
+                alertText = placementFlag.flagName;
+                placementFlag.isPinged = true;
+                //Instantiate a 2D alert
+                alertObject = PhotonNetwork.Instantiate(UISpritePrefabPath1, Vector3.zero, Quaternion.identity);
+                //Updating the score
+                score.UpdateScore();
+                placementFlag.SetScanned();
             }
-            else
+            else if (hitObject.TryGetComponent<PlacementMine>(out var placementMine) && placementMine.isPinged == false)
             {
-                //If no Physics Object was hit, spawn the 2nd Alert
-                alertObject = PhotonNetwork.Instantiate(UISpritePrefabPath2, Vector3.zero, Quaternion.identity);
+                alertText = "Mine";
+                placementMine.isPinged = true;
+                //Instantiate a 2D alert
+                alertObject = PhotonNetwork.Instantiate(UISpritePrefabPath1, Vector3.zero, Quaternion.identity);
             }
+        }
+        else if (_arRaycastManager.Raycast(crosshairPosition, hits, TrackableType.PlaneWithinPolygon) && hits.Count > 0)
+        {
+            localPosition = GameObject.Find("ScenarioObjects").transform.InverseTransformPoint(hits[0].pose.position);
+            alertObject = PhotonNetwork.Instantiate(UISpritePrefabPath2, Vector3.zero, Quaternion.identity);
+        }
 
-            if (alertObject.TryGetComponent<PlacementAlert>(out var placementAlert))
-            {
-                //Set the text for spawned alert and the 3D world position for the UI Sprite
-                placementAlert.SetData(alertText, localPosition);
-            }
+        if (alertObject != null && alertObject.TryGetComponent<PlacementAlert>(out var placementAlert))
+        {
+            //Set the text for spawned alert and the 3D world position for the UI Sprite
+            placementAlert.SetData(alertText, localPosition);
         }
     }
     /// <summary>
@@ -123,7 +115,8 @@ public class ARInteraction : MonoBehaviour
     public void RemoveHostObjects()
     {
         var ray = ARCamera.ScreenPointToRay(crosshairPosition);
-        if (Physics.Raycast(ray, out var hitObject, float.MaxValue))
+        int mask = 1 << 7;
+        if (Physics.Raycast(ray, out var hitObject, float.MaxValue, mask))
             if (hitObject.collider.TryGetComponent<PhotonView>(out var photonView))
                 PhotonNetwork.Destroy(photonView);
     }
@@ -139,7 +132,7 @@ public class ARInteraction : MonoBehaviour
 
             //Spawn a 3D Ping and on the hit pose in 3D
             var flagObject = PhotonNetwork.Instantiate(flagObjectPath, position, hitPose.rotation);
-            flagObject.GetComponent<PlacementFlag>().SetPose(position, hitPose.rotation);
+            flagObject.GetComponent<PlacementFlag>().SetPose(position, Quaternion.identity);
         }
     }
 
@@ -154,7 +147,7 @@ public class ARInteraction : MonoBehaviour
 
             //Spawn a 3D Ping and on the hit pose in 3D
             var mineObject = PhotonNetwork.Instantiate(minePrefabPath, position, hitPose.rotation);
-            mineObject.GetComponent<PlacementMine>().SetPose(position, hitPose.rotation);
+            mineObject.GetComponent<PlacementMine>().SetPose(position, Quaternion.identity);
         }
     }
 

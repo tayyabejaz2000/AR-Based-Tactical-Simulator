@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1263198229854317404}
   - component: {fileID: 8210011428057271203}
   - component: {fileID: 851579721050177659}
+  - component: {fileID: 4241893682445397380}
   m_Layer: 7
   m_Name: Flag_Prefab
   m_TagString: Untagged
@@ -69,6 +70,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   flagName: Objective 1
   isPinged: 0
+--- !u!65 &4241893682445397380
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1263198229854317403}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.52848387, y: 0.60955894, z: 0.08470411}
+  m_Center: {x: 0.25496006, y: 0.3573708, z: 0.030936573}
 --- !u!1 &3764864045231155683
 GameObject:
   m_ObjectHideFlags: 0
@@ -80,7 +94,6 @@ GameObject:
   - component: {fileID: 4572467857901024089}
   - component: {fileID: 638227876207656188}
   - component: {fileID: 3404588925338716214}
-  - component: {fileID: 9067717120690512867}
   m_Layer: 7
   m_Name: Flag
   m_TagString: Untagged
@@ -151,16 +164,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &9067717120690512867
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3764864045231155683}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1.7146838, y: 0.24588537, z: 0.03305942}
-  m_Center: {x: 0.8460529, y: -0.10647852, z: 0.008849175}

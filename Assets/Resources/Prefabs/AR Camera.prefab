@@ -10,12 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 243542294821208119}
   - component: {fileID: 1745523240923605376}
-  - component: {fileID: 243542294821208121}
   - component: {fileID: 243542294821208115}
   - component: {fileID: 243542294821208116}
   - component: {fileID: 243542294821208117}
   - component: {fileID: 243542294821208114}
-  - component: {fileID: 6717995911944135494}
   - component: {fileID: 243542294821208120}
   - component: {fileID: 243542294821208123}
   - component: {fileID: 243542294821208118}
@@ -59,27 +57,10 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents:
-  - {fileID: 243542294821208121}
+  ObservedComponents: []
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &243542294821208121
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 243542294821208112}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
-  m_UseLocal: 1
 --- !u!20 &243542294821208115
 Camera:
   m_ObjectHideFlags: 0
@@ -166,22 +147,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_UseCustomMaterial: 0
   m_CustomMaterial: {fileID: 0}
---- !u!114 &6717995911944135494
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 243542294821208112}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b15f82cc229284894964d2d30806969d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_HumanSegmentationStencilMode: 0
-  m_HumanSegmentationDepthMode: 0
-  m_EnvironmentDepthMode: 0
-  m_OcclusionPreferenceMode: 0
 --- !u!33 &243542294821208120
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -249,7 +214,6 @@ MonoBehaviour:
   - {fileID: 243542294821208114}
   - {fileID: 243542294821208117}
   - {fileID: 243542294821208116}
-  - {fileID: 6717995911944135494}
   - {fileID: 243542294821208115}
   otherComponents:
   - {fileID: 243542294821208120}

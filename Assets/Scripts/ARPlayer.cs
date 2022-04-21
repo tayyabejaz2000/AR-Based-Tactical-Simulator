@@ -63,15 +63,18 @@ public class ARPlayer : MonoBehaviour
 
     void LateUpdate()
     {
-        localPosition = GameObject.Find("ScenarioObjects").transform.InverseTransformPoint(transform.position);
-        playerMarker.GetComponent<ARPlayerMarker>().SetPosition(localPosition);
+        if (photonView.IsMine)
+        {
+            localPosition = GameObject.Find("ScenarioObjects").transform.InverseTransformPoint(transform.position);
+            playerMarker.GetComponent<ARPlayerMarker>().SetPosition(localPosition);
+        }
     }
     private void OnTriggerEnter(Collider other)
     {
         if (photonView.IsMine && other.gameObject.tag == "Mine")
         {
             FindObjectOfType<Health>().UpdateHealth();
-            PhotonNetwork.Destroy(other.GetComponentInParent<PhotonView>());
+            PhotonNetwork.Destroy(other.GetComponent<PhotonView>());
         }
     }
 }
