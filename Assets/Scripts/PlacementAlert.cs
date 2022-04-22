@@ -47,7 +47,7 @@ public class PlacementAlert : MonoBehaviour
 
     public void SetData(string alertText, Vector3 position, bool deleteOnTimeout)
     {
-        GetComponent<PhotonView>().RPC("SetDataRPC", RpcTarget.All, alertText, position);
+        GetComponent<PhotonView>().RPC("SetDataRPC", RpcTarget.All, alertText, position, deleteOnTimeout);
     }
     [PunRPC]
     void SetDataRPC(string text, Vector3 localPos, bool deleteOnTimeout)

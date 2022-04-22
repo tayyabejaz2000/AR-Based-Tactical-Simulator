@@ -92,6 +92,7 @@ public class MainMenu : MonoBehaviourPunCallbacks
     {
         playerInRoom = PhotonNetwork.CurrentRoom.PlayerCount;
         button.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "START ROOM (" + playerInRoom.ToString() + "/" + maxPlayers.ToString() + ")";
+        PhotonNetwork.LocalPlayer.NickName = "Player";
     }
 
     /// <summary>
@@ -100,6 +101,7 @@ public class MainMenu : MonoBehaviourPunCallbacks
     /// </summary>
     public override void OnConnectedToMaster()
     {
+
         //Enable `Join Room` Button
         button.interactable = true;
 
@@ -141,6 +143,7 @@ public class MainMenu : MonoBehaviourPunCallbacks
 
     void Start()
     {
+
         Input.compass.enabled = true;
         Input.location.Start();
         //Set `Join Button` to be disabled until connected to Photon Servers

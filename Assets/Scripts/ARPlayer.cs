@@ -56,8 +56,9 @@ public class ARPlayer : MonoBehaviour
 
             playerMarker = PhotonNetwork.Instantiate(playerMarkerPrefabPath, Vector3.zero, Quaternion.identity);
 
-            playerMarker.GetComponent<Image>().enabled = false;
-            playerMarker.GetComponentInChildren<TMPro.TextMeshProUGUI>().enabled = false;
+            playerMarker.transform.GetChild(0).GetComponent<Image>().enabled = false;
+            foreach (var textComp in playerMarker.GetComponentsInChildren<TMPro.TextMeshProUGUI>())
+                textComp.enabled = false;
         }
         else
         {
@@ -70,7 +71,7 @@ public class ARPlayer : MonoBehaviour
         if (photonView.IsMine)
         {
             localPosition = GameObject.Find("ScenarioObjects").transform.InverseTransformPoint(transform.position);
-            playerMarker.GetComponent<ARPlayerMarker>().SetPosition(localPosition);
+            playerMarker.GetComponent<ARPlayerMarker>().SetData(localPosition, PhotonNetwork.LocalPlayer.NickName);
         }
     }
     private void OnTriggerEnter(Collider other)
