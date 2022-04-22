@@ -80,6 +80,7 @@ public class ARInteraction : MonoBehaviour
                 //Updating the score
                 score.UpdateScore();
                 placementFlag.SetScanned();
+                placementFlag.myAlert = alertObject.GetComponent<PlacementAlert>();
             }
             else if (hitObject.TryGetComponent<PlacementMine>(out var placementMine) && placementMine.isPinged == false)
             {
@@ -87,6 +88,7 @@ public class ARInteraction : MonoBehaviour
                 placementMine.isPinged = true;
                 //Instantiate a 2D alert
                 alertObject = PhotonNetwork.Instantiate(UISpritePrefabPath1, Vector3.zero, Quaternion.identity);
+                placementMine.myAlert = alertObject.GetComponent<PlacementAlert>();
             }
         }
         else if (_arRaycastManager.Raycast(crosshairPosition, hits, TrackableType.PlaneWithinPolygon) && hits.Count > 0)
@@ -110,8 +112,12 @@ public class ARInteraction : MonoBehaviour
         var ray = ARCamera.ScreenPointToRay(crosshairPosition);
         var mask = 1 << 6;
         if (Physics.Raycast(ray, out var hitObject, float.MaxValue, mask))
+        {
             if (hitObject.collider.TryGetComponent<PhotonView>(out var photonView))
+            {
                 PhotonNetwork.Destroy(photonView);
+            }
+        }
     }
 
     public void RemoveHostObjects()
@@ -119,8 +125,27 @@ public class ARInteraction : MonoBehaviour
         var ray = ARCamera.ScreenPointToRay(crosshairPosition);
         int mask = 1 << 7;
         if (Physics.Raycast(ray, out var hitObject, float.MaxValue, mask))
-            if (hitObject.collider.TryGetComponent<PhotonView>(out var photonView))
-                PhotonNetwork.Destroy(photonView);
+        {
+			if (hitObject.collider.TryGetComponent<PhotonView>(out var photonView))
+			{
+                if(hitObject.collider.gameObject.TryGetComponent<PlacementFlag>(out var flag))
+                {
+                    if(flag.myAlert != null)
+                    {
+                        PhotonNetwork.Destroy(flag.myAlert.GetComponent<PhotonView>());
+                    }
+                }
+                else if(hitObject.collider.gameObject.TryGetComponent<PlacementMine>(out var mine))
+				{
+					if (mine.myAlert != null)
+					{
+						PhotonNetwork.Destroy(mine.myAlert.GetComponent<PhotonView>());
+					}
+				}
+			    
+				PhotonNetwork.Destroy(photonView);
+			}
+		}    
     }
 
     public void AddTargetFlag()

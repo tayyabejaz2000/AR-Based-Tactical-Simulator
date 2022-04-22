@@ -3,6 +3,8 @@ using Photon.Pun;
 public class PlacementMine : MonoBehaviour
 {
     public bool isPinged = false;
+    //Attached Alert
+    public PlacementAlert myAlert = null;
     public void SetPose(Vector3 position, Quaternion rotation)
     {
         GetComponent<PhotonView>().RPC("SetPoseRPC", RpcTarget.All, position, rotation);
