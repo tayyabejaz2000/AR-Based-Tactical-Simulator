@@ -92,4 +92,17 @@ public class HostInterfaceManagement : MonoBehaviour
                 break;
         }
     }
+
+    public void SaveScene()
+    {
+        //TODO: Take Scenario Name as input from host
+        var scenarioName = "temp";
+        ARController.SaveScenarioObjects(scenarioName);
+    }
+    public void LoadScene()
+    {
+        //TODO: Take Scenario Name as input from host
+        var scenarioName = "temp";
+        ARController.LoadScenarioObjects(scenarioName);
+    }
 }

@@ -1,3 +1,4 @@
+using System.IO;
 using System.Collections.Generic;
 
 using Photon.Pun;
@@ -30,6 +31,12 @@ public class ARInteraction : MonoBehaviour
     Vector3 positionCentroid;
     Quaternion rotationCentroid;
 
+    Dictionary<string, List<Pose>> hostObjects = new Dictionary<string, List<Pose>>()
+    {
+        {"flags", new List<Pose>()},
+        {"mines", new List<Pose>()},
+    };
+
 
     /// <summary>
     /// Adds a 3D Ping Object in scene, binded to UI Ping Button
@@ -46,7 +53,6 @@ public class ARInteraction : MonoBehaviour
             Debug.Log("HitPose Rotation: " + hitPose.rotation);
 
             var position = GameObject.Find("ScenarioObjects").transform.InverseTransformPoint(hitPose.position);
-
             //Spawn a 3D Ping and on the hit pose in 3D
             var pingObject = PhotonNetwork.Instantiate(objectPrefabPath, position, hitPose.rotation);
             pingObject.GetComponent<PlacementObject>().SetPose(position, hitPose.rotation);
@@ -126,26 +132,26 @@ public class ARInteraction : MonoBehaviour
         int mask = 1 << 7;
         if (Physics.Raycast(ray, out var hitObject, float.MaxValue, mask))
         {
-			if (hitObject.collider.TryGetComponent<PhotonView>(out var photonView))
-			{
-                if(hitObject.collider.gameObject.TryGetComponent<PlacementFlag>(out var flag))
+            if (hitObject.collider.TryGetComponent<PhotonView>(out var photonView))
+            {
+                if (hitObject.collider.gameObject.TryGetComponent<PlacementFlag>(out var flag))
                 {
-                    if(flag.myAlert != null)
+                    if (flag.myAlert != null)
                     {
                         PhotonNetwork.Destroy(flag.myAlert.GetComponent<PhotonView>());
                     }
                 }
-                else if(hitObject.collider.gameObject.TryGetComponent<PlacementMine>(out var mine))
-				{
-					if (mine.myAlert != null)
-					{
-						PhotonNetwork.Destroy(mine.myAlert.GetComponent<PhotonView>());
-					}
-				}
-			    
-				PhotonNetwork.Destroy(photonView);
-			}
-		}    
+                else if (hitObject.collider.gameObject.TryGetComponent<PlacementMine>(out var mine))
+                {
+                    if (mine.myAlert != null)
+                    {
+                        PhotonNetwork.Destroy(mine.myAlert.GetComponent<PhotonView>());
+                    }
+                }
+                //TODO: Delete Object from hostObjects too, need to save respective names
+                PhotonNetwork.Destroy(photonView);
+            }
+        }
     }
 
     public void AddTargetFlag()
@@ -160,6 +166,8 @@ public class ARInteraction : MonoBehaviour
             //Spawn a 3D Ping and on the hit pose in 3D
             var flagObject = PhotonNetwork.Instantiate(flagObjectPath, position, hitPose.rotation);
             flagObject.GetComponent<PlacementFlag>().SetPose(position, Quaternion.identity);
+            //Save Names of objects for deleting later in RemoveHostObjects
+            hostObjects["flags"].Add(new Pose(flagObject.transform.position, flagObject.transform.rotation));
         }
     }
 
@@ -175,6 +183,8 @@ public class ARInteraction : MonoBehaviour
             //Spawn a 3D Ping and on the hit pose in 3D
             var mineObject = PhotonNetwork.Instantiate(minePrefabPath, position, hitPose.rotation);
             mineObject.GetComponent<PlacementMine>().SetPose(position, Quaternion.identity);
+            //Save Names of objects for deleting later in RemoveHostObjects
+            hostObjects["mines"].Add(new Pose(mineObject.transform.position, mineObject.transform.rotation));
         }
     }
 
@@ -186,6 +196,28 @@ public class ARInteraction : MonoBehaviour
             var scenarioObjects = GameObject.Find("ScenarioObjects");
             scenarioObjects.transform.position = hitPose.position;
             scenarioObjects.transform.eulerAngles = Vector3.up * (-Input.compass.trueHeading);
+        }
+    }
+
+    public void SaveScenarioObjects(string scenarioName)
+    {
+        var jsonData = JsonUtility.ToJson(hostObjects);
+        File.WriteAllText(Application.streamingAssetsPath + "/" + scenarioName, jsonData);
+    }
+
+    public void LoadScenarioObjects(string ScenarioName)
+    {
+        var stringData = File.ReadAllText(Application.streamingAssetsPath + "/" + ScenarioName);
+        hostObjects = JsonUtility.FromJson<Dictionary<string, List<Pose>>>(stringData);
+        foreach (var flagPose in hostObjects["flags"])
+        {
+            var flagObject = PhotonNetwork.Instantiate(flagObjectPath, flagPose.position, flagPose.rotation);
+            flagObject.GetComponent<PlacementFlag>().SetPose(flagPose.position, Quaternion.identity);
+        }
+        foreach (var minePose in hostObjects["mines"])
+        {
+            var mineObject = PhotonNetwork.Instantiate(minePrefabPath, minePose.position, minePose.rotation);
+            mineObject.GetComponent<PlacementMine>().SetPose(minePose.position, Quaternion.identity);
         }
     }
 
