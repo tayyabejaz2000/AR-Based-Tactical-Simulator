@@ -2,6 +2,8 @@ using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 
+using Newtonsoft.Json;
+
 using Photon.Pun;
 
 using UnityEngine;
@@ -198,14 +200,16 @@ public class ARInteraction : MonoBehaviour
     public void SaveScenarioObjects(string scenarioName)
     {
         var dumpData = hostObjects.Select(o => (o.name.ToLower().Contains("flag"), o.transform.position, o.transform.rotation)).ToList();
-        var jsonData = JsonUtility.ToJson(dumpData);
+        var jsonData = JsonConvert.SerializeObject(dumpData);
+        Debug.Log(jsonData);
         File.WriteAllText(Application.persistentDataPath + "/Saves/" + scenarioName, jsonData);
     }
 
     public void LoadScenarioObjects(string ScenarioName)
     {
         var stringData = File.ReadAllText(Application.persistentDataPath + "/Saves/" + ScenarioName);
-        var data = JsonUtility.FromJson<List<(bool isFlag, Vector3 position, Quaternion rotation)>>(stringData);
+        Debug.Log(stringData);
+        var data = JsonConvert.DeserializeObject<List<(bool isFlag, Vector3 position, Quaternion rotation)>>(stringData);
         hostObjects.Clear();
         foreach (var obj in data)
         {
