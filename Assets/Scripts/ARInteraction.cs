@@ -10,6 +10,13 @@ using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
+struct SaveData
+{
+    public bool isFlag;
+    public float[] position;
+    public float[] rotation;
+}
+
 [RequireComponent(typeof(ARRaycastManager))]
 public class ARInteraction : MonoBehaviour
 {
@@ -199,7 +206,12 @@ public class ARInteraction : MonoBehaviour
 
     public void SaveScenarioObjects(string scenarioName)
     {
-        var dumpData = hostObjects.Select(o => (o.name.ToLower().Contains("flag"), o.transform.position, o.transform.rotation)).ToList();
+        var dumpData = hostObjects.Select(o => new SaveData
+        {
+            isFlag = o.name.ToLower().Contains("flag"),
+            position = new float[] { o.transform.position.x, o.transform.position.y, o.transform.position.z },
+            rotation = new float[] { o.transform.rotation.x, o.transform.rotation.y, o.transform.rotation.z, o.transform.rotation.w },
+        }).ToList();
         var jsonData = JsonConvert.SerializeObject(dumpData);
         Debug.Log(jsonData);
         File.WriteAllText(Application.persistentDataPath + "/Saves/" + scenarioName, jsonData);
@@ -209,20 +221,22 @@ public class ARInteraction : MonoBehaviour
     {
         var stringData = File.ReadAllText(Application.persistentDataPath + "/Saves/" + ScenarioName);
         Debug.Log(stringData);
-        var data = JsonConvert.DeserializeObject<List<(bool isFlag, Vector3 position, Quaternion rotation)>>(stringData);
+        var data = JsonConvert.DeserializeObject<List<SaveData>>(stringData);
         hostObjects.Clear();
         foreach (var obj in data)
         {
+            var position = new Vector3(obj.position[0], obj.position[1], obj.position[2]);
+            var rotation = new Quaternion(obj.rotation[0], obj.rotation[1], obj.rotation[2], obj.rotation[3]);
             if (obj.isFlag)
             {
-                var flagObject = PhotonNetwork.Instantiate(flagObjectPath, obj.position, obj.rotation);
-                flagObject.GetComponent<PlacementFlag>().SetPose(obj.position, Quaternion.identity);
+                var flagObject = PhotonNetwork.Instantiate(flagObjectPath, position, rotation);
+                flagObject.GetComponent<PlacementFlag>().SetPose(position, Quaternion.identity);
                 hostObjects.Add(flagObject);
             }
             else
             {
-                var mineObject = PhotonNetwork.Instantiate(minePrefabPath, obj.position, obj.rotation);
-                mineObject.GetComponent<PlacementMine>().SetPose(obj.position, Quaternion.identity);
+                var mineObject = PhotonNetwork.Instantiate(minePrefabPath, position, rotation);
+                mineObject.GetComponent<PlacementMine>().SetPose(position, Quaternion.identity);
                 hostObjects.Add(mineObject);
             }
         }
