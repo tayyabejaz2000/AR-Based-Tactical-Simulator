@@ -199,12 +199,12 @@ public class ARInteraction : MonoBehaviour
     {
         var dumpData = hostObjects.Select(o => (o.name.ToLower().Contains("flag"), o.transform.position, o.transform.rotation)).ToList();
         var jsonData = JsonUtility.ToJson(dumpData);
-        File.WriteAllText(Application.streamingAssetsPath + "/Saves/" + scenarioName, jsonData);
+        File.WriteAllText(Application.persistentDataPath + "/Saves/" + scenarioName, jsonData);
     }
 
     public void LoadScenarioObjects(string ScenarioName)
     {
-        var stringData = File.ReadAllText(Application.streamingAssetsPath + "/Saves/" + ScenarioName);
+        var stringData = File.ReadAllText(Application.persistentDataPath + "/Saves/" + ScenarioName);
         var data = JsonUtility.FromJson<List<(bool isFlag, Vector3 position, Quaternion rotation)>>(stringData);
         hostObjects.Clear();
         foreach (var obj in data)

@@ -101,8 +101,8 @@ public class HostInterfaceManagement : MonoBehaviour
 
     public void SaveScene()
     {
-        if (!Directory.Exists(Application.streamingAssetsPath + "/Saves"))
-            Directory.CreateDirectory(Application.streamingAssetsPath + "/Saves");
+        if (!Directory.Exists(Application.persistentDataPath + "/Saves"))
+            Directory.CreateDirectory(Application.persistentDataPath + "/Saves");
         var scenarioName = scenarioNameObject.GetComponent<TMPro.TMP_InputField>().text;
         ARController.SaveScenarioObjects(scenarioName);
         scenarioNameObject.SetActive(false);
