@@ -209,7 +209,7 @@ public class ARInteraction : MonoBehaviour
         var dumpData = hostObjects.Select(o => new SaveData
         {
             isFlag = o.name.ToLower().Contains("flag"),
-            position = new float[] { o.transform.position.x, o.transform.position.y, o.transform.position.z },
+            position = new float[] { o.transform.localPosition.x, o.transform.localPosition.y, o.transform.localPosition.z },
             rotation = new float[] { o.transform.rotation.x, o.transform.rotation.y, o.transform.rotation.z, o.transform.rotation.w },
         }).ToList();
         var jsonData = JsonConvert.SerializeObject(dumpData);
