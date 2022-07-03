@@ -1,7 +1,7 @@
 using System.IO;
 
 using UnityEngine;
-
+using UnityEngine.UI;
 enum ButtonStateHost
 {
     None,
@@ -26,6 +26,8 @@ public class HostInterfaceManagement : MonoBehaviour
     public GameObject scenarioNameObject;
 
     public ARInteraction ARController;
+
+    public Dropdown dropdown;
 
     void Start()
     {
@@ -109,8 +111,7 @@ public class HostInterfaceManagement : MonoBehaviour
     }
     public void LoadScene()
     {
-        //TODO: Take Scenario Name as input from host
-        var scenarioName = "temp";
-        ARController.LoadScenarioObjects(scenarioName);
+        var scenarioName = dropdown.options[dropdown.value];
+        ARController.LoadScenarioObjects(scenarioName.text);
     }
 }

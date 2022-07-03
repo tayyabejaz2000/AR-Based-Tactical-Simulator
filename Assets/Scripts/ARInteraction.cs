@@ -213,14 +213,12 @@ public class ARInteraction : MonoBehaviour
             rotation = new float[] { o.transform.rotation.x, o.transform.rotation.y, o.transform.rotation.z, o.transform.rotation.w },
         }).ToList();
         var jsonData = JsonConvert.SerializeObject(dumpData);
-        Debug.Log(jsonData);
         File.WriteAllText(Application.persistentDataPath + "/Saves/" + scenarioName, jsonData);
     }
 
     public void LoadScenarioObjects(string ScenarioName)
     {
         var stringData = File.ReadAllText(Application.persistentDataPath + "/Saves/" + ScenarioName);
-        Debug.Log(stringData);
         var data = JsonConvert.DeserializeObject<List<SaveData>>(stringData);
         hostObjects.Clear();
         foreach (var obj in data)

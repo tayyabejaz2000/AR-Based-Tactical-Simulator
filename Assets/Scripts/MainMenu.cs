@@ -28,10 +28,6 @@ public class MainMenu : MonoBehaviourPunCallbacks
     {
         if (!Permission.HasUserAuthorizedPermission(Permission.Camera))
             Permission.RequestUserPermission(Permission.Camera);
-        if (!Permission.HasUserAuthorizedPermission(Permission.ExternalStorageWrite))
-            Permission.RequestUserPermission(Permission.ExternalStorageWrite);
-        if (!Permission.HasUserAuthorizedPermission(Permission.ExternalStorageRead))
-            Permission.RequestUserPermission(Permission.ExternalStorageRead);
     }
     /// <summary>
     /// Returns number of players currently present in the room
