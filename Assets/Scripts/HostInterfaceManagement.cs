@@ -23,6 +23,7 @@ public class HostInterfaceManagement : MonoBehaviour
     public GameObject buttonFlag;
     public GameObject buttonDestroy;
     public GameObject buttonBackdrop;
+    public GameObject scenarioNameObject;
 
     public ARInteraction ARController;
 
@@ -93,11 +94,16 @@ public class HostInterfaceManagement : MonoBehaviour
         }
     }
 
+    public void OpenSaveScenarioInput()
+    {
+        scenarioNameObject.SetActive(true);
+    }
+
     public void SaveScene()
     {
-        //TODO: Take Scenario Name as input from host
-        var scenarioName = "temp";
+        var scenarioName = scenarioNameObject.GetComponent<TMPro.TMP_InputField>().text;
         ARController.SaveScenarioObjects(scenarioName);
+        scenarioNameObject.SetActive(false);
     }
     public void LoadScene()
     {
