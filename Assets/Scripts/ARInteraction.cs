@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using System.Collections.Generic;
 
 using Photon.Pun;
@@ -31,11 +32,8 @@ public class ARInteraction : MonoBehaviour
     Vector3 positionCentroid;
     Quaternion rotationCentroid;
 
-    Dictionary<string, List<Pose>> hostObjects = new Dictionary<string, List<Pose>>()
-    {
-        {"flags", new List<Pose>()},
-        {"mines", new List<Pose>()},
-    };
+    List<GameObject> hostObjects = new List<GameObject>();
+
 
 
     /// <summary>
@@ -148,7 +146,7 @@ public class ARInteraction : MonoBehaviour
                         PhotonNetwork.Destroy(mine.myAlert.GetComponent<PhotonView>());
                     }
                 }
-                //TODO: Delete Object from hostObjects too, need to save respective names
+                hostObjects.Remove(hitObject.collider.gameObject);
                 PhotonNetwork.Destroy(photonView);
             }
         }
@@ -166,8 +164,7 @@ public class ARInteraction : MonoBehaviour
             //Spawn a 3D Ping and on the hit pose in 3D
             var flagObject = PhotonNetwork.Instantiate(flagObjectPath, position, hitPose.rotation);
             flagObject.GetComponent<PlacementFlag>().SetPose(position, Quaternion.identity);
-            //Save Names of objects for deleting later in RemoveHostObjects
-            hostObjects["flags"].Add(new Pose(flagObject.transform.position, flagObject.transform.rotation));
+            hostObjects.Add(flagObject);
         }
     }
 
@@ -183,8 +180,7 @@ public class ARInteraction : MonoBehaviour
             //Spawn a 3D Ping and on the hit pose in 3D
             var mineObject = PhotonNetwork.Instantiate(minePrefabPath, position, hitPose.rotation);
             mineObject.GetComponent<PlacementMine>().SetPose(position, Quaternion.identity);
-            //Save Names of objects for deleting later in RemoveHostObjects
-            hostObjects["mines"].Add(new Pose(mineObject.transform.position, mineObject.transform.rotation));
+            hostObjects.Add(mineObject);
         }
     }
 
@@ -201,23 +197,30 @@ public class ARInteraction : MonoBehaviour
 
     public void SaveScenarioObjects(string scenarioName)
     {
-        var jsonData = JsonUtility.ToJson(hostObjects);
-        File.WriteAllText(Application.streamingAssetsPath + "/" + scenarioName, jsonData);
+        var dumpData = hostObjects.Select(o => (o.name.ToLower().Contains("flag"), o.transform.position, o.transform.rotation)).ToList();
+        var jsonData = JsonUtility.ToJson(dumpData);
+        File.WriteAllText(Application.streamingAssetsPath + "/Saves/" + scenarioName, jsonData);
     }
 
     public void LoadScenarioObjects(string ScenarioName)
     {
-        var stringData = File.ReadAllText(Application.streamingAssetsPath + "/" + ScenarioName);
-        hostObjects = JsonUtility.FromJson<Dictionary<string, List<Pose>>>(stringData);
-        foreach (var flagPose in hostObjects["flags"])
+        var stringData = File.ReadAllText(Application.streamingAssetsPath + "/Saves/" + ScenarioName);
+        var data = JsonUtility.FromJson<List<(bool isFlag, Vector3 position, Quaternion rotation)>>(stringData);
+        hostObjects.Clear();
+        foreach (var obj in data)
         {
-            var flagObject = PhotonNetwork.Instantiate(flagObjectPath, flagPose.position, flagPose.rotation);
-            flagObject.GetComponent<PlacementFlag>().SetPose(flagPose.position, Quaternion.identity);
-        }
-        foreach (var minePose in hostObjects["mines"])
-        {
-            var mineObject = PhotonNetwork.Instantiate(minePrefabPath, minePose.position, minePose.rotation);
-            mineObject.GetComponent<PlacementMine>().SetPose(minePose.position, Quaternion.identity);
+            if (obj.isFlag)
+            {
+                var flagObject = PhotonNetwork.Instantiate(flagObjectPath, obj.position, obj.rotation);
+                flagObject.GetComponent<PlacementFlag>().SetPose(obj.position, Quaternion.identity);
+                hostObjects.Add(flagObject);
+            }
+            else
+            {
+                var mineObject = PhotonNetwork.Instantiate(minePrefabPath, obj.position, obj.rotation);
+                mineObject.GetComponent<PlacementMine>().SetPose(obj.position, Quaternion.identity);
+                hostObjects.Add(mineObject);
+            }
         }
     }
 
