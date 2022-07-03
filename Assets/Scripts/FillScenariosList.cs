@@ -7,7 +7,6 @@ public class FillScenariosList : MonoBehaviour
     void Start()
     {
         var dropdown = GetComponent<Dropdown>();
-        dropdown.ClearOptions();
         if (Directory.Exists(Application.persistentDataPath + "/Saves"))
         {
             var saves = Directory.EnumerateFiles(Application.persistentDataPath + "/Saves");

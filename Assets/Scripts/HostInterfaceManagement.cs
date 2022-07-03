@@ -111,7 +111,10 @@ public class HostInterfaceManagement : MonoBehaviour
     }
     public void LoadScene()
     {
-        var scenarioName = dropdown.options[dropdown.value];
-        ARController.LoadScenarioObjects(scenarioName.text);
+        if (dropdown.value != 0)
+        {
+            var scenarioName = dropdown.options[dropdown.value];
+            ARController.LoadScenarioObjects(scenarioName.text);
+        }
     }
 }
